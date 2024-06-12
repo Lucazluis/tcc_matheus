@@ -17,7 +17,7 @@
                 <tr>
                     <th>Nome</th>
                     <th>Descrição</th>
-                    <th>Valor</th>
+                    <th>Médico</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -41,8 +41,8 @@
                 <input type="text" id="nome" name="nome" required>
                 <label for="descricao">Descrição:</label>
                 <textarea id="descricao" name="descricao" required></textarea>
-                <label for="valor">Valor:</label>
-                <input type="number" id="valor" name="valor" required>
+                <label for="Médico">Médico:</label>
+                <input type="text" id="Médico" name="Médico" required>
                 <button type="submit">Salvar</button>
             </form>
         </div>
@@ -54,9 +54,9 @@
 
 // Dados de exemplo (substitua por sua fonte de dados)
 var servicos = [
-    { id: 1, nome: "Limpeza Dental", descricao: "Remoção de placa bacteriana e tártaro.", valor: 100 },
-    { id: 2, nome: "Obturação", descricao: "Preenchimento de cavidades.", valor: 250 },
-    { id: 3, nome: "Raio-X", descricao: "Exame radiográfico dos dentes.", valor: 50 },
+    { id: 1, nome: "Limpeza Dental", descricao: "Remoção de placa bacteriana e tártaro.", Medico: "claudio Valera" },
+    { id: 2, nome: "Obturação", descricao: "Preenchimento de cavidades.", Medico: "fatima Bernades"  },
+    { id: 3, nome: "Raio-X", descricao: "Exame radiográfico dos dentes.", Medico: " cleito Rasta" },
 ];
 
 // Função para carregar serviços na tabela
