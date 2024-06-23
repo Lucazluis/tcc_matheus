@@ -1,0 +1,316 @@
+{% extends "layout.html"%}
+
+{% block estilo %}
+<link rel="stylesheet" href={{url_for("static", filename="servicos.css" )}}>
+{% endblock %}
+
+{% block corpo %}
+<main>
+    <div class="container">
+        <h1>Dias de Funcionamento</h1>
+        <div id="calendar"></div>
+    </div>
+
+
+
+    <!-- div do furmulario-->
+    <div>
+        <h1>Detalhes do Dia</h1>
+        <form>
+            <label for="services">Serviços:</label>
+            <select id="services" name="servico">
+                {% for sevico in listaServicos %}
+                <option value={{servico[0]}}>{{servico[1]}}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <label for="times">Horários:</label>
+            <select id="times"></select>
+            <br>
+            <label for="doctors">Médicos:</label>
+            <select id="doctors">
+            </select>
+            <br>
+            <label for="name">Seu Nome:</label>
+            <input type="text" id="name" required>
+            <br>
+            <label for="email">Seu Email:</label>
+            <input type="email" id="email" required>
+            <br>
+            <button> Agendar Consulta</button>
+        </form>
+
+    </div>
+</main>
+{% endblock %}
+
+{% block js %}
+<script src=".js">
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendar = document.getElementById('calendar');
+        const info = document.getElementById('info');
+        const servicesSelect = document.getElementById('services');
+        const timesSelect = document.getElementById('times');
+        const doctorsSelect = document.getElementById('doctors');
+        const bookingForm = document.getElementById('booking-form');
+
+        const clinicData = {
+            "2024-06-06": {
+                services: ["Consulta Geral", "Pediatria", "Dermatologia"],
+                times: ["08:00", "10:00", "14:00", "16:00"],
+                doctors: ["Dr. Silva", "Dra. Maria", "Dr. João"]
+            },
+            // Adicione mais dias e dados conforme necessário
+        };
+
+        function updateDetails(date) {
+            const data = clinicData[date];
+
+            if (data) {
+                info.textContent = `Serviços, horários e médicos disponíveis para o dia ${date}:`;
+                servicesSelect.innerHTML = data.services.map(service => `<option value="${service}">${service}</option>`).join('');
+                timesSelect.innerHTML = data.times.map(time => `<option value="${time}">${time}</option>`).join('');
+                doctorsSelect.innerHTML = data.doctors.map(doctor => `<option value="${doctor}">${doctor}</option>`).join('');
+            } else {
+                info.textContent = `Nenhum serviço disponível para o dia ${date}.`;
+                servicesSelect.innerHTML = '';
+                timesSelect.innerHTML = '';
+                doctorsSelect.innerHTML = '';
+            }
+        }
+
+        function createCalendar() {
+            const now = new Date();
+            const month = now.getMonth();
+            const year = now.getFullYear();
+
+            calendar.innerHTML = '';
+            const monthDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 1; i <= monthDays; i++) {
+                const day = new Date(year, month, i);
+                const dateStr = day.toISOString().split('T')[0];
+
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.textContent = i;
+
+                dayDiv.addEventListener('click', function () {
+                    updateDetails(dateStr);
+                });
+
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        createCalendar();
+
+        bookingForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const selectedService = servicesSelect.value;
+            const selectedTime = timesSelect.value;
+            const selectedDoctor = doctorsSelect.value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            alert(`Consulta agendada com sucesso!\n\nServiço: ${selectedService}\nHorário: ${selectedTime}\nMédico: ${selectedDoctor}\nNome: ${name}\nEmail: ${email}`);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendar = document.getElementById('calendar');
+        const info = document.getElementById('info');
+        const servicesSelect = document.getElementById('services');
+        const timesSelect = document.getElementById('times');
+        const doctorsSelect = document.getElementById('doctors');
+        const bookingForm = document.getElementById('booking-form');
+        const bookingsList = document.getElementById('bookings-list');
+
+        const clinicData = {
+            "2024-06-03": {
+                services: ["Consulta Geral", "Pediatria", "Dermatologia"],
+                times: ["08:00", "10:00", "14:00", "16:00"],
+                doctors: ["Dr. Silva", "Dra. Maria", "Dr. João"]
+            },
+            "2024-06-04": {
+                services: ["Consulta Geral", "Cardiologia"],
+                times: ["09:00", "11:00", "13:00"],
+                doctors: ["Dr. Lima", "Dra. Fernanda"]
+            },
+            // Adicione mais dias e dados conforme necessário
+        };
+
+        const workingDays = ["2024-06-03", "2024-06-04", "2024-06-05", "2024-06-06", "2024-06-07", "2024-06-10", "2024-06-11"];
+        const bookings = [];
+
+        function updateDetails(date) {
+            const data = clinicData[date];
+
+            if (data) {
+                info.textContent = `Serviços, horários e médicos disponíveis para o dia ${date}:`;
+                servicesSelect.innerHTML = data.services.map(service => `<option value="${service}">${service}</option>`).join('');
+                timesSelect.innerHTML = data.times.map(time => `<option value="${time}">${time}</option>`).join('');
+                doctorsSelect.innerHTML = data.doctors.map(doctor => `<option value="${doctor}">${doctor}</option>`).join('');
+            } else {
+                info.textContent = `Nenhum serviço disponível para o dia ${date}.`;
+                servicesSelect.innerHTML = '';
+                timesSelect.innerHTML = '';
+                doctorsSelect.innerHTML = '';
+            }
+        }
+
+        function createCalendar() {
+            const now = new Date();
+            const month = now.getMonth();
+            const year = now.getFullYear();
+
+            calendar.innerHTML = '';
+            const monthDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 1; i <= monthDays; i++) {
+                const day = new Date(year, month, i);
+                const dateStr = day.toISOString().split('T')[0];
+
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.textContent = i;
+
+                if (workingDays.includes(dateStr)) {
+                    dayDiv.classList.add('working-day');
+                } else {
+                    dayDiv.classList.add('non-working-day');
+                }
+
+                dayDiv.addEventListener('click', function () {
+                    updateDetails(dateStr);
+                });
+
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        function updateBookingsList() {
+            bookingsList.innerHTML = bookings.map((booking, index) => `
+            <li class="booking-item">
+                <p>Serviço: ${booking.service}</p>
+                <p>Horário: ${booking.time}</p>
+                <p>Médico: ${booking.doctor}</p>
+                <p>Nome: ${booking.name}</p>
+                <p>Email: ${booking.email}</p>
+                <button class="cancel-button" data-index="${index}">Cancelar Consulta</button>
+            </li>
+        `).join('');
+
+            document.querySelectorAll('.cancel-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const index = this.getAttribute('data-index');
+                    bookings.splice(index, 1);
+                    updateBookingsList();
+                    alert('Consulta cancelada com sucesso!');
+                });
+            });
+        }
+
+        createCalendar();
+
+        bookingForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const selectedService = servicesSelect.value;
+            const selectedTime = timesSelect.value;
+            const selectedDoctor = doctorsSelect.value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            bookings.push({ service: selectedService, time: selectedTime, doctor: selectedDoctor, name, email });
+            updateBookingsList();
+
+            alert(`Consulta agendada com sucesso!\n\nServiço: ${selectedService}\nHorário: ${selectedTime}\nMédico: ${selectedDoctor}\nNome: ${name}\nEmail: ${email}`);
+        });
+    });
+
+ document.addEventListener('DOMContentLoaded', function () {
+        const calendar = document.getElementById('calendar');
+        const highlightedDays = ["2024-06-05", "2024-06-10", "2024-06-15"]; // Dias destacados
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function createCalendar(month, year) {
+            calendar.innerHTML = '';
+
+            const firstDay = new Date(year, month).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                calendar.appendChild(emptyDiv);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = new Date(year, month, day).toISOString().split('T')[0];
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                dayDiv.textContent = day;
+
+                if (highlightedDays.includes(dateStr)) {
+                    dayDiv.classList.add('highlighted');
+                }
+
+                calendar.appendChild(dayDiv);
+            }
+        }
+
+        function updateCalendar() {
+            document.getElementById('current-month').textContent = `${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`;
+            createCalendar(currentMonth, currentYear);
+        }
+
+        function createNavigation() {
+            const nav = document.createElement('div');
+            nav.classList.add('nav-buttons');
+
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Anterior';
+            prevButton.addEventListener('click', function () {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                updateCalendar();
+            });
+
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Próximo';
+            nextButton.addEventListener('click', function () {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                updateCalendar();
+            });
+
+            nav.appendChild(prevButton);
+            nav.appendChild(nextButton);
+
+            const header = document.querySelector('.container');
+            header.insertBefore(nav, calendar);
+
+            const monthDisplay = document.createElement('div');
+            monthDisplay.id = 'current-month';
+            header.insertBefore(monthDisplay, calendar);
+        }
+
+        createNavigation();
+        updateCalendar();
+    });
+
+
+    function redirecionarPara(link) {
+        window.location.href = link; // Redireciona para o link especificado
+    }
+
+</script>
+{% endblock %}

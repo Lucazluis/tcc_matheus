@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* bolota */
+    color: #000000; /* waguinho */
+    height: 1dvh;
+  }
+  
+  header {
+    background-color: #3498db; /* azul */
+    color: #ffffff; /* bolota */
+    padding: 20px;
+    height: 120px;
+  }
+   
+  header h1 {
+    margin: 0;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    display: inline;
+    margin-right: 20px;
+  }
+  
+  nav ul li a {
+    color: #ffffff; /* bolota */
+    text-decoration: none;
+  }
+  
+  main {
+    padding: 20px;
+  }
+  
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .service {
+    background-color: #f0f0f0; /* cinza claro */
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  button {
+    background-color: #3498db; /* azul */
+    color: #ffffff; /* bolota */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  
+  }
+  
+  button:hover {
+    background-color: #2980b9; /* azul mais escuro */
+  }
+  
+  footer {
+    background-color: #3498db; /* azul */
+    color: #ffffff; /* bolota */
+    padding: 10px;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+  }
+  
