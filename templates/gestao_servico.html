@@ -1,162 +1,156 @@
 {% extends "layout.html"%}
 <link rel="stylesheet" href={{url_for("static", filename="gestao_servico.css" )}}>
 {% block corpo %}
+
 <body>
     <h1>Gerenciamento de Serviços</h1>
 
 
-<div id="servicos-lista">
-  <h2>Modifique a Lista de Serviços:</h2>
-  <table class="tabelaServicos">
-    <thead>
-      <tr>
-        <th>Serviço</th>
-        <th>Horários</th>
-        <th>Médico</th>
-        <th>Ações</th>
-        <th>Metodo</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
-</div>
+    <div class="modal">
+        <h2>Modifique a Lista de Serviços:</h2>
+
+        <h2>Adicione mais Serviços </h2>
+        {% if session["mensagem"] %}
+        <p>{{session[mensagem]}}</p>
+        {% endif %}
+        <form action="/gestao" method="POST" class="formServico">
+            <label for="servico">Serviço:</label>
+            <input type="text" id="nome" name="Servico" required><br>
+            <label for="descricao">Decrição:</label>
+            <input type="text" id="descricao" name="Descrição" required><br>
 
 
+            <button type="submit">adicionar</button>
+        </form>
 
-    <div id="modal-servico" class="modal">
-        <div class="modal-content">
-            
-            <h2>Adicione mais Serviços </h2>
-            <form class="formServico">
-                <input type="hidden" id="id-servico">
-                <label for="servico">Serviço:</label><br>
-                <input type="text" id="nome" name="nome" required>
-                <label for="descricao">Decrição:</label><br>
-                <input type="text" id="descricao" name="descricao" required>
-                <label for="datahora">Data e Hora:</label><br>
-                <input type="datetime-local" id="datahora" name="datahora" required>
-                <label for="Médico">Médico:</label><br>
-                <input type="text" id="Médico" name="Médico" required>
-                <button type="submit">Salvar</button><br>
-            </form>
-        </div>
+        <h2> Atualizar Serviços </h2>
+        <form action="/gestao/atualizar" method="POST" class="formServico">
+            <label for="id">ID do Serviço:</label>
+            <input type="id" id="id" name="id" required><br>
+            <label for="descricao">Decrição:</label>
+            <input type="text" id="descricao" name="Descricao" required><br>
+            <label for="servico">Serviço:</label>
+            <input type="text" id="nome" name="Servico" required><br>
+
+            <button type="submit">Atualizar</button>
+        </form>
+
+        <h2> Deletar Serviços </h2>
+        <form action="gestao/atualizar/deletar" method="POST" class="formServico">
+            <label for="id">ID do Serviço:</label>
+            <input type="id" id="id" name="id" required><br>
+            <button type="submit">Deletar</button>
+        </form>
     </div>
     <br>
+    <table>
+        <th>
+            <td>Id</td>
+            <td>Descrição</td>
+            <td>Serviço</td>
+        </th>
+
+        {% for servico in listaServicos %}
+        <tr>
+            <td>{{servico[0]}}</td>
+            <td>{{servico[1]}}</td>
+            <td>{{servico[2]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
     <br>
     <br>
     <br>
 </body>
-{% endblock %}    
+{% endblock %}
 
 {% block js %}
-    <script > // Funções para gerenciar serviços
+<script> // Funções para gerenciar serviços
 
-       // Funções para gerenciar serviços
+    // Funções para gerenciar serviços
 
-// Dados de exemplo (substitua por sua fonte de dados)
-var servicos = [
-    { id: 1, Serviço: "Limpeza Dental", Horarios: "Remoção de placa bacteriana e tártaro.", Medico: "claudio Valera" },
-    { id: 2, Serviço: "Obturação", Horarios: "Preenchimento de cavidades.", Medico: "fatima Bernades"  },
-    { id: 3, Serviço: "Raio-X", Horarios: "Exame radiográfico dos dentes.", Medico: " cleito Rasta" },
-];
+    // Dados de exemplo (substitua por sua fonte de dados)
+    var servicos = [
+        { id: 1, Serviço: "Limpeza Dental", Horarios: "Remoção de placa bacteriana e tártaro.", Medico: "claudio Valera" },
+        { id: 2, Serviço: "Obturação", Horarios: "Preenchimento de cavidades.", Medico: "fatima Bernades" },
+        { id: 3, Serviço: "Raio-X", Horarios: "Exame radiográfico dos dentes.", Medico: " cleito Rasta" },
+    ];
 
-// Função para carregar serviços na tabela
-function carregarServicos() {
-    var tabela = document.getElementById("tabela-servicos").querySelector("tbody");
-    tabela.innerHTML = ""; // Limpar tabela
+    // Função para carregar serviços na tabela
+    function carregarServicos() {
+        var tabela = document.getElementById("tabela-servicos").querySelector("tbody");
+        tabela.innerHTML = ""; // Limpar tabela
 
-    servicos.forEach(function(servico) {
-        var linha = tabela.insertRow();
-        var celulaNome = linha.insertCell();
-        var celulaDescricao = linha.insertCell();
-        var celulaValor = linha.insertCell();
-        var celulaAcoes = linha.insertCell();
+        servicos.forEach(function (servico) {
+            var linha = tabela.insertRow();
+            var celulaNome = linha.insertCell();
+            var celulaDescricao = linha.insertCell();
+            var celulaValor = linha.insertCell();
+            var celulaAcoes = linha.insertCell();
 
-        celulaNome.textContent = servico.nome;
-        celulaDescricao.textContent = servico.descricao;
-        celulaValor.textContent = servico.valor;
-        celulaAcoes.innerHTML = `
+            celulaNome.textContent = servico.nome;
+            celulaDescricao.textContent = servico.descricao;
+            celulaValor.textContent = servico.valor;
+            celulaAcoes.innerHTML = `
             <button onclick="editarServico(${servico.id})">Editar</button>
             <button onclick="removerServico(${servico.id})">Excluir</button>
         `;
-    });
-}
-
-// Função para abrir o modal de edição
-function editarServico(idServico) {
-    var servico = servicos.find(function(servico) {
-        return servico.id === idServico;
-    });
-
-    if (servico) {
-        document.getElementById("id-servico").value = servico.id;
-        document.getElementById("nome").value = servico.nome;
-        document.getElementById("descricao").value = servico.descricao;
-        document.getElementById("valor").value = servico.valor;
-        document.getElementById("modal-servico").style.display = "block";
+        });
     }
-}
 
-// Função para salvar alterações no serviço
-function salvarServico() {
-    var idServico = parseInt(document.getElementById("id-servico").value);
-    var nome = document.getElementById("nome").value;
-    var descricao = document.getElementById("descricao").value;
-    var valor = parseFloat(document.getElementById("valor").value);
+    // Função para abrir o modal de edição
+    function editarServico(idServico) {
+        var servico = servicos.find(function (servico) {
+            return servico.id === idServico;
+        });
 
-    var servicoIndex = servicos.findIndex(function(servico) {
-        return servico.id === idServico;
-    });
-
-    if (servicoIndex !== -1) {
-        servicos[servicoIndex].nome = nome;
-        servicos[servicoIndex].descricao = descricao;
-        servicos[servicoIndex].valor = valor;
-
-        carregarServicos(); // Atualizar tabela
-        document.getElementById("modal-servico").style.display = "none"; // Fechar modal
-    }
-}
-
-// Função para remover serviço
-function removerServico(idServico) {
-    var servicoIndex = servicos.findIndex(function(servico) {
-        return servico.id === idServico;
-    });
-
-    if (servicoIndex !== -1) {
-        servicos.splice(servicoIndex, 1);
-        carregarServicos(); // Atualizar tabela
-    }
-}
-
-// Função para adicionar novo serviço (a ser implementada)
-function adicionarServico() {
-    // Implementar lógica para adicionar novo serviço à lista "servicos"
-    // e atualizar a tabela
-}
-
-// Inicialização da página
-window.onload = function() {
-    carregarServicos();
-    configurarModal();
-};
-
-// Função para configurar o modal
-function configurarModal() {
-    var modal = document.getElementById("modal-servico");
-    var span = document.getElementsByClassName("close")[0];
-
-    span.onclick = function() {
-        modal.style.display = "none";
-    };
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (servico) {
+            document.getElementById("id-servico").value = servico.id;
+            document.getElementById("nome").value = servico.nome;
+            document.getElementById("descricao").value = servico.descricao;
+            document.getElementById("valor").value = servico.valor;
+            document.getElementById("modal-servico").style.display = "block";
         }
-    };
-}
+    }
+
+    // Função para salvar alterações no serviço
+    function salvarServico() {
+        var idServico = parseInt(document.getElementById("id-servico").value);
+        var nome = document.getElementById("nome").value;
+        var descricao = document.getElementById("descricao").value;
+        var valor = parseFloat(document.getElementById("valor").value);
+
+        var servicoIndex = servicos.findIndex(function (servico) {
+            return servico.id === idServico;
+        });
+
+        if (servicoIndex !== -1) {
+            servicos[servicoIndex].nome = nome;
+            servicos[servicoIndex].descricao = descricao;
+            servicos[servicoIndex].valor = valor;
+
+            carregarServicos(); // Atualizar tabela
+            document.getElementById("modal-servico").style.display = "none"; // Fechar modal
+        }
+    }
+
+    // Função para remover serviço
+    function removerServico(idServico) {
+        var servicoIndex = servicos.findIndex(function (servico) {
+            return servico.id === idServico;
+        });
+
+        if (servicoIndex !== -1) {
+            servicos.splice(servicoIndex, 1);
+            carregarServicos(); // Atualizar tabela
+        }
+    }
+
+    // Função para adicionar novo serviço (a ser implementada)
+    function adicionarServico() {
+        // Implementar lógica para adicionar novo serviço à lista "servicos"
+        // e atualizar a tabela
+    }
+
 </script>
-{% endblock %}
+{% endblock %}

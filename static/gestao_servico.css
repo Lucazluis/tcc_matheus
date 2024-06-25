@@ -1,10 +1,10 @@
 
 body {
+    margin: 0;
     font-family: sans-serif;
     margin: 0;
-    margin-left: 8%;
+    margin-left: 15%;
     padding: 20px;
-
 }
 
 h1, h2 {
@@ -42,8 +42,9 @@ button:hover {
 
 /* Estilos para Modal */
 .modal {
-    display: none;
-    position: fixed;
+
+    display: flex;
+    flex-direction: row;
     z-index: 1;
     left: 0;
     top: 0;
@@ -52,6 +53,8 @@ button:hover {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
 }
+
+
 
 .modal-content {
     background-color: #fefefe;
@@ -80,8 +83,8 @@ background-color: black;
 }
 
 .conteiner{
-    display: flexbox;
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
    
     background-color: #fefefe;
     margin: 15% auto;
@@ -91,8 +94,8 @@ background-color: black;
 }
 
 .formServico{
-display: table-column;
-flex-direction: column;
+display: flex;
+flex-direction: row;
 justify-content: center;
 
 
