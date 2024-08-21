@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tela de Inicio</title>
+  <link rel="stylesheet" href={{url_for("static", filename="layout.css" )}}>
+
+</head>
+{% block estilo %} {% endblock %}
+
+<body id="bodycabeca">
+  <header id="headercabeca">
+    <div style="display: flex; justify-content: space-between">
+      <h1 style="justify-items: start;">OdontoFácil</h1>
+      {% if ("nivel" in session) %}
+      <h1 style="justify-items: end;">Bem vindo(a) {{session["email"]}}</h1>
+      {% endif %}
+    </div>
+
+    <nav>
+      <ul>
+
+        <button class="butaocabeca" onclick="redirecionarPara('/')">Inicio</button>
+
+        {% if ("nivel" in session and session["nivel"] == "paciente") %}
+        <button class="butaocabeca" onclick="redirecionarPara('/servico')">Serviços</button>
+        {% endif %}
+
+        {% if ("nivel" in session and session["nivel"] == "secretaria") %}
+        <div class="dropdown">
+          <button onclick="dropdowbtn()" class="dropbtn">Gestão :</button>
+          <div id="myDropdown" class="dropdown-content">
+            <a href="/gestao/servico">Serviço</a>
+            <a href="/gestao/medico">Médico</a>
+            <a href="/gestao/horario">Horário</a>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if ("nivel" in session) %}
+        <button class="butaocabeca" onclick="redirecionarPara('/servico/gestao/consultasAgendadas')">Consultas
+          Agendadas</button>
+        {% endif %}
+
+        <button class="butaocabeca"
+          onclick="redirecionarPara('/servico/gestao/consultasAgendadas/sobre')">Sobre</button>
+        <button class="butaocabeca"
+          onclick="redirecionarPara('/servico/gestao/consultasAgendadas/sobre/contato')">Contato</button>
+
+        {% if ("nivel" in session) %}
+        <button class="butaocabeca"
+          onclick="redirecionarPara('/servico/gestao/consultasAgendadas/sobre/contato/usuario')">Perfil de
+          usuario</button>
+        {% endif %}
+
+        {% if "nivel" not in session %}
+        <button class="butaocabeca" onclick="redirecionarPara('/login')">Login</button>
+        {% else %}
+        <button class="butaocabeca" onclick="redirecionarPara('/logout')">Logout</button>
+        {% endif %}
+
+      </ul>
+    </nav>
+  </header>
+  {% block corpo%} {% endblock %}
+
+  <footer id="footercabeca">
+    <p>&copy; 2024 OdontoFácil. Todos os direitos reservados.</p>
+  </footer>
+  <script>
+    function redirecionarPara(link) {
+      window.location.href = link; // Redireciona para o link especificado
+    }
+
+    /* When the user clicks on the button,
+    toggle between hiding and showing the dropdown content */
+    function dropdowbtn() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function (event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
+  {% block js %} {% endblock %}
+</body>
+
+</html>

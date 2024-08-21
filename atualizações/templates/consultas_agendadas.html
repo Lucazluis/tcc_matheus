@@ -1,0 +1,67 @@
+{% extends "layout.html"%}
+
+{% block estilo %}
+<link rel="stylesheet" href={{url_for("static", filename="consultas_agendadas.css" )}}>
+{% endblock %}
+
+{% block corpo%}
+<h1>Consultas Agendadas</h1>
+
+<div id="filtros">
+    <label for="data">Data:</label>
+    <input type="date" id="data">
+    <label for="paciente">Paciente:</label>
+    <input type="text" id="paciente">
+    <label for="servico">Serviço:</label>
+    <select id="servico">
+        <option value="">Todos</option>
+    </select>
+    <label for="profissional">Profissional:</label>
+    <select id="profissional">
+        <option value="">Todos</option>
+    </select>
+    <button id="btn-filtrar">Filtrar</button>
+</div>
+
+<div id="calendario"></div>
+
+<!-- <table id="tabela-consultas" class="display" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Serviço</th>
+                <th>Horário</th>
+                <th>Médico</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+       
+    </table>
+-->
+<div id="modal-consulta" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Consulta</h2>
+        <form id="form-consulta">
+            <input type="hidden" id="id-consulta">
+            <label for="paciente">Paciente:</label>
+            <input type="text" id="paciente" name="paciente" required>
+            <label for="servico">Serviço:</label>
+            <select id="servico" name="servico" required>
+            </select>
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            <label for="hora">Hora:</label>
+            <input type="time" id="hora" name="hora" required>
+            <label for="profissional">Médico:</label>
+            <select id="profissional" name="profissional" required>
+            </select>
+            <button type="submit">Salvar</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+</body>
+
+</html>

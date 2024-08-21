@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tela de Inicio</title>
+  <link rel="stylesheet" href={{url_for("static", filename="index.css" )}}>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  {% block estilo %} {% endblock %}
+</head>
+
+<body>
+  <header>
+    <h1>OdontoFácil</h1>
+    <div class="navbar">
+      <a href={{url_for('index')}}>Inicio</a>
+      {% if ("nivel" in session and session["nivel"] == "paciente") %}
+      <a href="#">Serviços</a>
+      {% endif %}
+      {% if ("nivel" in session and session["nivel"] == "secretaria") %}
+      <div class="dropdown">
+        <button class="dropbtn">Gestao <i class="fa fa-caret-down"></i></button>
+        <div class="dropdown-content">
+          <a href="{{url_for('especialidadeGet')}}">Especialidades</a>
+          <a href={{url_for('servicosGet')}}>Serviços</a>
+          <a href="{{url_for('medicosGet')}}">Medicos</a>
+          <a href="#">Disponibilidade</a>
+        </div>
+      </div>
+      {% endif %}
+      <a href="#">Consultas Agendadas</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+      <a href="#">Perfil de usuario</a>
+      {% if "nivel" not in session %}
+      <a href={{url_for('loginGet')}}>Login</a>
+      {% else %}
+      <p>{{session["email"]}}</p>
+      <a href={{url_for('logout')}}>Logout</a>
+      {% endif %}
+
+    </div>
+  </header>
+  {% block corpo%} {% endblock %}
+
+  <footer>
+    <p>&copy; 2024 OdontoFácil. Todos os direitos reservados.</p>
+  </footer>
+  <script>
+    function redirecionarPara(link) {
+      window.location.href = link; // Redireciona para o link especificado
+    }
+  </script>
+  {% block js %} {% endblock %}
+</body>
+
+</html>
