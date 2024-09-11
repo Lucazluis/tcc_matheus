@@ -1,0 +1,146 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.search-bar {
+  display: flex;
+  width: 80%;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.search-bar button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.options button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.doctor-info {
+  width: 40%;
+  padding: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.doctor-info img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.doctor-info h2 {
+  margin-bottom: 5px;
+}
+
+.doctor-info p {
+  margin-bottom: 10px;
+}
+
+.doctor-info .details {
+  margin-top: 20px;
+}
+
+.doctor-info .details .detail {
+  margin-bottom: 5px;
+}
+
+.schedule {
+  width: 40%;
+  padding: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.schedule .calendar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.schedule .calendar button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.schedule .times {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.schedule .times button {
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.map {
+  width: 100%;
+  height: 400px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  margin-top: 20px;
+}

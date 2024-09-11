@@ -1,0 +1,166 @@
+{% extends "layout.html"%}
+
+{% block estilo %}
+<link rel="stylesheet" href={{url_for("static", filename="gestao.css" )}}>
+{% endblock %}
+
+
+{% block corpo %}
+
+
+
+
+<h1 class="titulo">Gerenciamento de Disponibilidade</h1>
+<div class="container">
+
+    <h2 class="titulo">Adicione mais Disponibilidade </h2>
+    {% if session["mensagem"] %}
+    <p>{{session[mensagem]}}</p>
+    {% endif %}
+    <form action={{url_for('disponibilidadeCadastrar')}} method="POST" class="formDisponibilidade">
+        <label for="idMedico">ID do Medico:</label>
+        <input type="id" id="idMedico" name="idMedico"><br><br>
+        <label for="dia"> Dia da semana:</label>
+        <select class="tamanho" id="dia" name="dia">
+            <option value="Domingo">Domingo</option>
+            <option value="Segunda-feira">Segunda-feira</option>
+            <option value="Terça-feira">Terça-feira</option>
+            <option value="Quarta-feira">Quarta-feira</option>
+            <option value="Quinta-feira">Quinta-feira</option>
+            <option value="Sexta-feira">Sexta-feira</option>
+            <option value="Sabado">Sábado</option>
+        </select>
+        <label for="horaInicio">Hora de inicio consulta:</label>
+        <input type="time" id="horaInicio" name="horaInicio"><br><br>
+        <label for="horaFim">Hora do fim connsulta:</label>
+        <input type="time" id="horaFim" name="horaFim"><br><br>
+        <label for="horaInicio">Tempo da Consulta em Minutos:</label>
+        <input type="int" id="tempo" name="tempo"><br><br>
+        <button type="submit">adicionar</button>
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h2 class="titulo"> Atualizar Médicos </h2>
+    <form action={{url_for('disponibilidadeAtualizar')}} method="POST" class="formDisponibilidade">
+        <label for="id">ID da disponibilidade:</label>
+        <input type="id" id="id" name="id" required><br>
+        <label for="idMedico">ID do Medico:</label>
+        <input type="id" id="idMedico" name="idMedico"><br><br>
+        <label for="dia"> Dia da semana:</label>
+        <select class="tamanho" id="dia" name="dia">
+            <option value="" disabled selected>Selecione...</option>
+            <option value="Domingo">Domingo</option>
+            <option value="Segunda-feira">Segunda-feira</option>
+            <option value="Terça-feira">Terça-feira</option>
+            <option value="Quarta-feira">Quarta-feira</option>
+            <option value="Quinta-feira">Quinta-feira</option>
+            <option value="Sexta-feira">Sexta-feira</option>
+            <option value="Sabado">Sábado</option>
+        </select>
+        <label for="horaInicio">Hora de inicio consulta:</label>
+        <input type="time" id="horaInicio" name="horaInicio"><br><br>
+        <label for="horaFim">Hora do fim connsulta:</label>
+        <input type="time" id="horaFim" name="horaFim"><br><br>
+        <label for="horaInicio">Tempo da Consulta em Minutos:</label>
+        <input type="int" id="tempo" name="tempo"><br><br>
+        <button type="submit">Atualizar</button>
+    </form>
+    <br>
+    <hr>
+    <br>
+    <h2 class="titulo">Deletar Disponibilidade</h2>
+    <form action={{url_for('disponibilidadeDeletar')}} method="POST" class="formDisponibilidade">
+        <label for="id">ID da Disponibilidade:</label>
+        <input type="id" id="id" name="id" required><br>
+        <button type="submit">Deletar</button>
+    </form>
+    <br>
+    <hr>
+    <br>
+    <table class="tabela" id border="1">
+        <thead>
+            <td>Id</td>
+            <td>Id Medico</td>
+            <td>horario_inicio</td>
+            <td>horario_fim</td>
+            <td>tempo_consulta</td>
+            <td>Dia_semana</td>
+        </thead>
+        <tbody>
+            {% for disponibilidade in listarDisponibilidade %}
+            <tr>
+                <td>{{disponibilidade[0]}}</td>
+                <td>{{disponibilidade[1]}}</td>
+                <td>{{disponibilidade[2]}}</td>
+                <td>{{disponibilidade[3]}}</td>
+                <td>{{disponibilidade[4]}}</td>
+                <td>{{disponibilidade[5]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<br>
+<br>
+</div>
+</body>
+{% endblock %}
+
+{% block js %}
+<script src="script.js"> const form = document.getElementById('form-secretaria');
+    const btnEnviar = document.getElementById('btn-enviar');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nome = document.getElementById('nome').value;
+        const data = document.getElementById('data').value;
+        const hora = document.getElementById('hora').value;
+        const medico = document.getElementById('medico').value;
+
+        // Enviar informações para a tela de agendamento
+        localStorage.setItem('nome', nome);
+        localStorage.setItem('data', data);
+        localStorage.setItem('hora', hora);
+        localStorage.setItem('medico', medico);
+
+        // Redirecionar para a tela de agendamento
+        window.location.href = 'agendamento.html';
+
+
+
+        function converterHoraParaMinutos(formId) {
+    const form = document.getElementById(formId);
+    const inputTempo = form.querySelector('#tempo');
+    const [horas, minutos] = inputTempo.value.split(':').map(Number);
+    const totalMinutos = horas * 60 + minutos;
+
+    // Envia os dados para o servidor (ajuste a rota e método conforme necessário)
+    fetch('/salvar_tempo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            tempo_consulta_min: totalMinutos
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Dados enviados com sucesso:', data);
+    })
+    .catch(error => {
+        console.error('Erro ao enviar dados:', error);   
+
+    });
+}
+
+// Chamar a função para cada formulário
+const formAdicionar = document.getElementById('formDisponibilidade');
+formAdicionar.addEventListener('submit', (event) => {
+    event.preventDefault();
+    converterHoraParaMinutos('formDisponibilidade');
+});
+    }); </script>
+{% endblock %}

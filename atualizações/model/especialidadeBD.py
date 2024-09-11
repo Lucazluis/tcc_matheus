@@ -1,36 +1,22 @@
-#crud para medicoa#
-import mysql.connector
+import model.BD as BD
 from mysql.connector import Error
 
-def iniciarConexao():
-    try:
-        conexao = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="WAGUINHO451",
-            database="Agenda"
-        )
-        return conexao
-    except Error as e:
-        print(f"Erro ao conectar ao MySQL: {e}")
-        return None
-
-def adiciona_especialidade(especialidade):
-     conexao = iniciarConexao()
-     if conexao is not None:
-         try:
-             cursor = conexao.cursor()
-             comando_especialidade = 'INSERT INTO especialidade (especialidade) VALUES (%s)'
-             cursor.execute(comando_especialidade, (especialidade))
-             conexao.commit()
-         except Error as e:
-             print(f"Erro ao executar o comando de inserção: {e}")
-         finally:
+def criar_especialidade(descricao):
+    conexao = BD.iniciarConexao()
+    if conexao is not None:
+        try:
+            cursor = conexao.cursor()
+            comando_servico = 'INSERT INTO especialidade (descricao) VALUES (%s)'
+            cursor.execute(comando_servico, [descricao])
+            conexao.commit()
+        except Error as e:
+            print(f"Erro ao executar o comando de inserção: {e}")
+        finally:
             cursor.close()
             conexao.close()
 
 def listar_especialidade():
-    conexao = iniciarConexao()
+    conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
             cursor = conexao.cursor()
@@ -45,30 +31,30 @@ def listar_especialidade():
             cursor.close()
             conexao.close()
 
-def atualizar_especialidade(id,especialidade):
-     conexao = iniciarConexao()
-     if conexao is not None:
-         try:
-             cursor = conexao.cursor()
-             comando = 'UPDATE especialidade SET especialidade = %s WHERE id = %s'
-             cursor.execute(comando, (especialidade, id))
-             conexao.commit()
-         except Error as e:
-             print(f"Erro ao executar o comando de atualização: {e}")
-         finally:
-             cursor.close()
-             conexao.close()
-
-def deletar_medico(id_medico):
-    conexao = iniciarConexao()
+def atualizar_especialidade(id_especialidade, descricao_nova):
+    conexao = BD.iniciarConexao()
     if conexao is not None:
-         try:
-             cursor = conexao.cursor()
-             comando = 'DELETE FROM medico WHERE id = %s'
-             cursor.execute(comando, [id_medico])
-             conexao.commit()
-         except Error as e:
-             print(f"Erro ao executar o comando de exclusão: {e}")
-         finally:
-             cursor.close()
-             conexao.close()    
+        try:
+            cursor = conexao.cursor()
+            comando = 'UPDATE especialidade SET descricao = %s WHERE id = %s'
+            cursor.execute(comando, [descricao_nova, id_especialidade])
+            conexao.commit()
+        except Error as e:
+            print(f"Erro ao executar o comando de atualização: {e}")
+        finally:
+            cursor.close()
+            conexao.close()
+
+def deletar_especialidade(id):
+    conexao = BD.iniciarConexao()
+    if conexao is not None:
+        try:
+            cursor = conexao.cursor()
+            comando = 'DELETE FROM especialidade WHERE id = %s'
+            cursor.execute(comando, [id])
+            conexao.commit()
+        except Error as e:
+            print(f"Erro ao executar o comando de exclusão: {e}")
+        finally:
+            cursor.close()
+            conexao.close()

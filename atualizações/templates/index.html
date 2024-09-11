@@ -1,48 +1,47 @@
 {% extends "layout.html"%}
 
 {% block estilo %}
-<link rel="stylesheet" href={{url_for("static", filename="index.css" )}}>
+<link rel="stylesheet" href="{{url_for('static', filename='index.css')}}">
 {% endblock %}
 
+
 {% block corpo %}
-<main>
-  <section class="services">
-    <h2>Algumas das especialidades das clínicas disponiveis em nosso site </h2>
-    <div class="service">
-      <h3>Limpeza Dental</h3>
-      <p>Durante a limpeza dental, removemos placas bacterianas e tártaros dos seus dentes usando ferramentas
-        especiais. Depois, polimos os dentes para deixá-los lisos e brilhantes. Se necessário, aplicamos flúor para
-        proteger contra cáries. É um procedimento simples e importante para manter sua boca saudável!.</p>
-      {% if ("nivel" in session) %}
-      <button onclick="redirecionarPara('servicos.html')">Agendar</button>
-      {% endif %}
-    </div>
-    <div class="service">
-      <h3>Extração de Dente</h3>
-      <p>Durante uma extração dental, removemos o dente afetado sob anestesia local. O procedimento pode envolver
-        alguma pressão e barulho, mas não é doloroso. Após a remoção, limpamos a área e fornecemos orientações para
-        cuidados pós-operatórios.</p>
-      {% if ("nivel" in session) %}
-      <button onclick="redirecionarPara('servicos.html')">Agendar</button>
-      {% endif %}
-    </div>
-    <div class="service">
-      <h3>Exame de rotina</h3>
-      <p>Nos exames de rotinas que iremos conseguir identificar se tem algo que precisse ser tratado, podemos
-        identificar caries, doença periodental e outros problemas dentarios.</p>
-      {% if ("nivel" in session) %}
-      <button onclick="redirecionarPara('hservicos.html')">Agendar</button>
-      {% endif %}
-    </div>
-    <div class="service">
-      <h3>Tratamento de caries</h3>
-      <p>O tratamento de caries envolve a remoção do tecido dental danificado e a restauração do dente com materiais
-        como resina composta, amálgama ou porcelana.</p>
-      {% if ("nivel" in session) %}
-      <button onclick="redirecionarPara('servicos.html')">Agendar</button>
-      {% endif %}
-    </div>
-  </section>
-</main>
+
+<div class="topbody">
+  <img class="img" src="{{url_for('static', filename='logo_do_site.jpg')}}" alt="logo">
+  <h2 class="titulo">Algumas das especialidades das clínicas disponiveis em nosso site </h2>
+</div>
+
+<div class="table">
+  <div class="service">
+    <h3>Limpeza Dental</h3>
+    <p>Durante a limpeza dental, removemos placas bacterianas e tártaros dos seus dentes usando ferramentas
+      especiais. Depois, polimos os dentes para deixá-los lisos e brilhantes. Se necessário, aplicamos flúor para
+      proteger contra cáries. É um procedimento simples e importante para manter sua boca saudável!.</p>
+    <button class="botao" onclick="redirecionarPara('servicos.html')">Agendar</button>
+  </div>
+  <div class="service">
+    <h3>Extração de Dente</h3>
+    <p>Durante uma extração dental, removemos o dente afetado sob anestesia local. O procedimento pode envolver
+      alguma pressão e barulho, mas não é doloroso. Após a remoção, limpamos a área e fornecemos orientações para
+      cuidados pós-operatórios.</p>
+    <button class="botao" onclick="redirecionarPara('servicos.html')">Agendar</button>
+  </div>
+</div>
+
+<div class="tabela">
+  <div class="service">
+    <h3>Exame de rotina</h3>
+    <p>Nos exames de rotinas que iremos conseguir identificar se tem algo que precisse ser tratado, podemos
+      identificar caries, doença periodental e outros problemas dentarios.</p>
+    <button class="botao" onclick="redirecionarPara('hservicos.html')">Agendar</button>
+  </div>
+  <div class="service">
+    <h3>Tratamento de caries</h3>
+    <p>O tratamento de caries envolve a remoção do tecido dental danificado e a restauração do dente com materiais
+      como resina composta, amálgama ou porcelana.</p>
+    <button class="botao" onclick="redirecionarPara('servicos.html')">Agendar</button>
+  </div>
+</div>
 
 {% endblock %}

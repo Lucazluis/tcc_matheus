@@ -1,69 +1,91 @@
 {% extends "layout.html"%}
 
 {% block estilo %}
-<link rel="stylesheet" href={{url_for("static", filename="gestao_servico.css" )}}>
+<link rel="stylesheet" href={{url_for("static", filename="gestao.css" )}}>
 {% endblock %}
 
 {% block corpo %}
 
 <body>
 
-    <!-- formulario do medico -->
+    <h1 class="titulo">Gerenciamento de Médicos</h1>
     <div class="container">
-        <h2>Adicionar Médicos</h2>
-        <form action="/medico/adicionar" method="POST" class="formMedico">
-            <div class="campo">
-                <label for="nome">Nome do Médico:</label>
-                <input type="text" id="nome" name="NOME" required><br>
-                <label for="CRM">CRM:</label>
-                <input type="text" id="CRM" name="CRM" required><br>
-                <label for="especi">Especialidade:</label>
-                <input type="text" id="especi" name="especialidade" required><br>
-                <button type="submit">adicionar</button>
-            </div>
-        </form>
 
-        <h2> Atualizar Médicos </h2>
-        <form action="/medico/atualiza" method="POST" class="formMedico">
-            <div class="campo">
-                <label for="IDMEDICO">ID do Médico:</label>
-                <input type="ID" id="IDMEDICO" name="IDMEDICO" required><br>
-                <label for="NOME">Nome Médico :</label>
-                <input type="text" id="NOME" name="NOME" required><br>
-                <label for="CRM">CRM:</label>
-                <input type="text" id="CRM" name="CRM" required><br>
-                <button type="submit">Atualizar</button>
-            </div>
-        </form>
-
-        <h2> Deletar Médico</h2>
-        <form action="/medico/deleta" method="POST" class="formMedico">
-            <div class="campo">
-                <label for="IDMEDICO">ID do Médico:</label>
-                <input type="id" id="IDMEDICO" name="IDMEDICO" required><br>
-                <button type="submit">Deletar</button>
-            </div>
+        <h2 class="titulo">Adicione mais Médicos</h2>
+        {% if session["mensagem"] %}
+        <p>{{session[mensagem]}}</p>
+        {% endif %}
+        <form action={{url_for('medicoCadrastar')}} method="POST" class="formMedico">
+            <label for="nome">Nome do Médico:</label>
+            <input type="text" id="nome" name="NOME" required><br>
+            <label for="CRM">CRM:</label>
+            <input type="text" id="CRM" name="CRM" required><br>
+            <label for="especi">Especialidade:</label>
+            <select class="tamanho" id="inputGroupSelect02" name="especialidade">
+                {% for especialidade in listaEspecialidades %}
+                <option value="" disabled selected>Selecione...</option>
+                <option value={{especialidade[0]}}> {{especialidade[1]}}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <button type="submit">adicionar</button>
         </form>
         <br>
-
-        <table id="myTable">
-            <th class="thcabeca">
-            <td>Id</td>
-            <td>Nome Médico</td>
-            <td>CRM</td>
-            </th>
-
-            {% for medico in listaMedico %}
-            <tr>
-                <td>{{medico[0]}}</td>
-                <td>{{medico[1]}}</td>
-                <td>{{medico[2]}}</td>
-            </tr>
-            {% endfor %}
+        <hr>
+        <br>
+        <h2 class="titulo"> Atualizar Médicos </h2>
+        <form action={{url_for('medicoAtualizar')}} method="POST" class="formMedico">
+            <label for="IDMEDICO">ID do Médico:</label>
+            <input type="ID" id="IDMEDICO" name="IDMEDICO" required><br>
+            <label for="NOME">Nome Médico :</label>
+            <input type="text" id="NOME" name="NOME" required><br>
+            <label for="CRM">CRM:</label>
+            <input type="text" id="CRM" name="CRM" required><br>
+            <label for="especi">Especialidade:</label>
+            <select class="tamanho" id="especialidade" name="especialidade">
+                {% for especialidade in listaEspecialidades %}
+                <option value={{especialidade[0]}}>{{especialidade[1]}}</option>
+                {% endfor %}
+            </select><br>
+            <button type="submit">Atualizar</button>
+        </form>
+        <br>
+        <hr>
+        <br>
+        <h2 class="titulo">Deletar Médicos</h2>
+        <form action={{url_for('medicoDelatar')}} method="POST" class="formMedico">
+            <label for="IDMEDICO">ID do Médico:</label>
+            <input type="id" id="IDMEDICO" name="IDMEDICO" required><br>
+            <button type="submit">Deletar</button>
+        </form>
+        <br>
+        <hr>
+        <br>
+        <table class="tabela" id border="1">
+            <thead>
+                <td>Id</td>
+                <td>Nome Médico</td>
+                <td>CRM</td>
+                <td>Especialidade</td>
+            </thead>
+            <tbody>
+                {% for medico in listaMedicos %}
+                 <tr>
+                    <td>{{medico[0]}}</td>
+                    <td>{{medico[1]}}</td>
+                    <td>{{medico[2]}}</td>
+                    <td>{{medico[3]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
-
+    <br>
+    <br>
+    <br>
+    </div>
 </body>
+
 {% endblock %}
 
 {% block js %}

@@ -1,13 +1,13 @@
 import model.BD as BD
 from mysql.connector import Error
 
-def criar_servico(descricao, nomeServico):
+def criar_disponibilidade(idMedico, horaInicio,horaFim,tempConsulta,diaSemana):
     conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando_servico = 'INSERT INTO servico (descricao, nomeServico) VALUES (%s, %s)'
-            cursor.execute(comando_servico, (descricao, nomeServico))
+            comando_disponibilidade = 'INSERT INTO disponibilidade (FK_medico, horario_inicio, horario_fim, tempo_consulta_min, DiaAtendimento) VALUES (%s,%s,%s,%s,%s)'
+            cursor.execute(comando_disponibilidade, [idMedico, horaInicio, horaFim, tempConsulta, diaSemana])
             conexao.commit()
         except Error as e:
             print(f"Erro ao executar o comando de inserção: {e}")
@@ -15,12 +15,12 @@ def criar_servico(descricao, nomeServico):
             cursor.close()
             conexao.close()
 
-def listar_servicos():
+def listar_disponibilidade():
     conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando = 'SELECT * FROM servico'
+            comando = 'SELECT * FROM disponibilidade'
             cursor.execute(comando)
             resultado = cursor.fetchall()
             return resultado
@@ -31,13 +31,13 @@ def listar_servicos():
             cursor.close()
             conexao.close()
 
-def atualizar_servico(id_servico, descricao_nova, nomeServico_novo):
+def atualizar_disponibilidade(idDisponibilidade, idMedicoNovo, horaInicioNovo,horaFimNovo,tempConsultaNovo,diaSemanaNovo):
     conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando = 'UPDATE servico SET descricao = %s, nomeServico = %s WHERE id = %s'
-            cursor.execute(comando, (descricao_nova, nomeServico_novo, id_servico))
+            comando_atualiza_disponibilidade = 'UPDATE disponibilidade SET FK_medico = %s, horario_inicio = %s,horario_inicio = %s,horario_inicio = %s,horario_inicio = %s WHERE id = %s'
+            cursor.execute (comando_atualiza_disponibilidade, [idMedicoNovo, horaInicioNovo,horaFimNovo,tempConsultaNovo,diaSemanaNovo, idDisponibilidade])
             conexao.commit()
         except Error as e:
             print(f"Erro ao executar o comando de atualização: {e}")
@@ -45,16 +45,17 @@ def atualizar_servico(id_servico, descricao_nova, nomeServico_novo):
             cursor.close()
             conexao.close()
 
-def deletar_servico(id_servico):
+def deletar_disponibilidade(id):
     conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando = 'DELETE FROM servico WHERE id = %s'
-            cursor.execute(comando, (id_servico,))
+            comando = 'DELETE FROM disponibilidade WHERE id = %s'
+            cursor.execute(comando, [id])
             conexao.commit()
         except Error as e:
             print(f"Erro ao executar o comando de exclusão: {e}")
         finally:
             cursor.close()
             conexao.close()
+

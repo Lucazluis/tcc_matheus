@@ -1,0 +1,73 @@
+{% extends "layout.html"%}
+
+{% block estilo %}
+<link rel="stylesheet" href={{url_for("static", filename="gestao.css" )}}>
+{% endblock %}
+
+{% block corpo %}
+
+<body>
+
+    <h1 class="titulo">Gerenciamento de Especialidades</h1>
+    <div class="container">
+
+        <h2 class="titulo">Adicione mais Especialidades </h2>
+        {% if session["mensagem"] %}
+        <p>{{session[mensagem]}}</p>
+        {% endif %}
+        <form action={{url_for('especialidadeCadastrar')}} method="POST" class="formServico">
+            <label for="descricao">Nome da Especialidade:</label>
+            <input type="text" id="descricao" name="Descrição" required><br>
+
+            <button type="submit">adicionar</button>
+        </form>
+        <br>
+        <hr>
+        <br>
+        <h2 class="titulo"> Atualizar Especialidades </h2>
+        <form action={{url_for('especialidadeAtualizar')}} method="POST" class="formServico">
+            <label for="id">ID da Especialidade:</label>
+            <input type="id" id="id" name="id" required><br>
+            <label for="descricao">Nome da Especialidade:</label>
+            <input type="text" id="descricao" name="Descricao" required><br>
+            <button type="submit">Atualizar</button>
+            
+        </form>
+        <br>
+        <hr>
+        <br>
+        <h2 class="titulo"> Deletar Nome da especialidade:</h2>
+        <form action={{url_for('especialidadeDeletar')}} method="POST" class="formServico">
+            <label for="id">ID da Especialidade:</label>
+            <input type="id" id="id" name="id" required><br>
+            <button type="submit">Deletar</button>
+        </form>
+        <br>
+        <hr>
+        <br>
+        <table class="tabela" id border="1">
+            <thead>
+                <td>Id</td>
+                <td>Descrição</td>
+            </thead>
+            <tbody>
+                {% for servico in listaEspecialidades %}
+                <tr>
+                    <td>{{servico[0]}}</td>
+                    <td>{{servico[1]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <br>
+    <br>
+    </div>
+</body>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

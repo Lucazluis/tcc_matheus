@@ -24,8 +24,9 @@
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
             </div>
             <button  onclick="redirecionarPara('index.html')" type="submit">Entrar</button>
-            <p>Ainda não possui uma conta? <button onclick="redirecionarPara('cadastro.html')" href="#">Cadastre-se</button></p>
         </form>
+        <p>Ainda não possui uma conta?</p>
+        <button> <a href="{{ url_for('cadastroGet') }}">Cadastre-se</a></button>
     </div>
 
     <script src="script.js">
@@ -68,6 +69,6 @@ function redirecionarPara(link) {
         window.location.href = link; // Redireciona para o link especificado
     }
 
-    </script>
+</script>
 </body>
 </html>

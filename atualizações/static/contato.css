@@ -3,9 +3,6 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
     margin: 0;
-
-  
-
 }
 
 .container {
@@ -64,6 +61,7 @@ input, textarea {
 }
 
 .input-container i {
+    margin-left: 3%;
     position: absolute;
     left: 10px;
     top: 50%;
