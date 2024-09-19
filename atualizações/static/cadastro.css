@@ -1,61 +1,155 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f0f0f0;
-    gap: 100px;
-    justify-content: center;
-    align-items: center;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
 }
 
 label {
-    margin-top: 10px;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
 }
 
-input, select, button {
-    margin-top: 5px;
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
 
 button {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: rgb(61, 139, 240);
-    color: white;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
-    border-radius: 13px;
+    border-radius: 3px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #3d8bf0;
+    background-color: #0062cc;
 }
 
-.container {
-    width: 500px;
-    margin: 50px auto;
-    margin-top: 10%;
-    border: 1px solid #5a5a5a;
-    padding: 20px;
-    border-radius: 5px;
-    justify-content: center;
-    background-color: #ffffff;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.img{
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;  
-height: 100px;
-margin-left: 40%;
+.header a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
 }
 
+.header a:hover {
+    text-decoration: underline;
+}
 
-   
+.comment-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+}
 
+.comment-button:hover {
+    background-color: #0062cc;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-group input {
+    width: 48%;
+}
+
+.input-group input:first-child {
+    margin-right: 10px;
+}
+
+.input-group input:last-child {
+    margin-left: 10px;
+}
+
+.country-select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.country-select img {
+    height: 200px;
+    width: 200px;
+    border-radius: 50px;
+    margin-left: 23%;
+}
+
+.country-select span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.country-select button {
+    padding: 8px 15px;
+}
+
+.address-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.address-form label {
+    margin-bottom: 5px;
+}
+
+.address-form input {
+    padding: 8px 15px;
+    margin-bottom: 10px;
+}
+
+.address-form input[type="text"] {
+    margin-bottom: 10px;
+}
+
+.address-form input[type="number"] {
+    margin-bottom: 10px;
+}
+
+.address-form textarea {
+    height: 80px;
+    resize: none;
+}

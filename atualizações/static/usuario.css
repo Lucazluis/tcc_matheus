@@ -1,74 +1,155 @@
 body {
     font-family: sans-serif;
     margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
 }
 
 .container {
-    width: 500px;
-    margin: 50px auto;
-    margin-top: 4%;
-    border: 1px solid #ccc;
+    max-width: 400px;
+    margin: 0 auto;
     padding: 20px;
+    background-color: #fff;
     border-radius: 5px;
-    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+h2 {
+    margin-top: 0;
+    color: #333;
+}
 
-h1 {
-    
+.form-group {
     margin-bottom: 20px;
 }
 
-.campo {
-    margin-bottom: 15px;
-}
-
 label {
-    display: flex;
-justify-content: center;
+    display: block;
     margin-bottom: 5px;
-align-items: center;
+    font-weight: bold;
+    color: #555;
 }
 
-input {
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+textarea {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
+    box-sizing: border-box;
 }
 
 button {
-    background-color: #3d8bf0;
-    color: white;
+    background-color: #007bff;
+    color: #fff;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
 }
 
-img {
-    position: absolute; /* Posicionamento absoluto */
-    top: 20px; /* Posição superior */
-    left: 20px; /* Posição esquerda */
-    width: 100px; /* Largura */
-    height: 100px; /* Altura */
-    border: 2px solid #ccc; /* Borda */
-    border-radius: 50%; /* Cantos arredondados */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra */
+button:hover {
+    background-color: #0062cc;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-button {
-    background-color: #3498db; /* azul */
-    color: #ffffff; /* bolota */
-    border: none;
+.header a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.header a:hover {
+    text-decoration: underline;
+}
+
+.comment-button {
+    background-color: #007bff;
+    color: #fff;
     padding: 10px 20px;
-    border-radius: 5px;
+    border: none;
+    border-radius: 3px;
     cursor: pointer;
-  
-  }
-  
-  button:hover {
-    background-color: #2980b9; /* azul mais escuro */
-  }
+    margin-left: 10px;
+}
 
+.comment-button:hover {
+    background-color: #0062cc;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-group input {
+    width: 48%;
+}
+
+.input-group input:first-child {
+    margin-right: 10px;
+}
+
+.input-group input:last-child {
+    margin-left: 10px;
+}
+
+.country-select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.country-select img {
+    height: 200px;
+    width: 200px;
+    border-radius: 50px;
+    margin-left: 23%;
+}
+
+.country-select span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.country-select button {
+    padding: 8px 15px;
+}
+
+.address-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.address-form label {
+    margin-bottom: 5px;
+}
+
+.address-form input {
+    padding: 8px 15px;
+    margin-bottom: 10px;
+}
+
+.address-form input[type="text"] {
+    margin-bottom: 10px;
+}
+
+.address-form input[type="number"] {
+    margin-bottom: 10px;
+}
+
+.address-form textarea {
+    height: 80px;
+    resize: none;
+}

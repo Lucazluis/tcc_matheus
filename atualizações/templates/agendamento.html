@@ -11,13 +11,12 @@
 <body>
     <div class="container">
         <div class="search-bar">
-            <input type="text" placeholder="Digite a especialidade desejada">
-            <button>Buscar</button>
-        </div>
-
-        <div class="options">
-            <button id="presencial">Presencial</button>
-            <button id="telemedicina">Telemedicina</button>
+            <label for="especi">:</label>
+            <select class="tamanho" id="especialidade" name="especialidade">
+                {% for especialidade in listaEspecialidades %}
+                <option value={{especialidade[0]}}>{{especialidade[1]}}</option>
+                {% endfor %}
+            </select><br>            <button>Buscar</button>
         </div>
 
         <div class="content">
@@ -30,14 +29,6 @@
                 <div class="details">
                     <h3>Especialidades:</h3>
                     <p>Cirurgia Bariátrica</p>
-                    <p><a href="#">+ Ver mais</a></p>
-                </div>
-                <div class="details">
-                    <h3>Endereço:</h3>
-                    <p>Clínica Cirúrgica</p>
-                    <p>Avenida Governador Agamenon Magalhães, 4760, Hospital Português (Prédio antigo próximo a Capela)
-                    </p>
-                    <p>Paissandu, Recife - PE</p>
                 </div>
             </div>
 
@@ -77,12 +68,7 @@
             </div>
         </div>
 
-        <div class="map">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.206524404726!2d-34.88679098505967!3d-8.060289676626722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab220c3425f397%3A0xa3301c032a00803e!2sCasa+Amarela%2C+Recife%2C+PE!5e0!3m2!1spt-BR!2sbr!4v1694405773685!5m2!1spt-BR!2sbr"
-                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
+ 
     </div>
     </div>
 

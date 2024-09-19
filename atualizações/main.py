@@ -267,7 +267,6 @@ def gestaoGet():
     servicos = gestaoBD.listar_servicos()
     return render_template("gestao_servico.html", listaServicos=servicos)
 
-
 ############# Rotas de controle de acesso ##################
 
 @app.route("/agendarConsulta")
@@ -297,20 +296,83 @@ def cadastroGet():
     return render_template("tela_cadastro.html")
 
 @app.post("/cadastro")
-def cadastroPost():
+def contaCadastrar():
+    if "email" in session and session.get("nivel") == "paciente":
         email = request.form["email"]
         senha = request.form["senha"]
+        FK_Paciente = request.form["cpf"]
         cpf = request.form["cpf"]
-        
+        nome = request.form["nome"]
+        data_nascimento = request.form["dataNascimento"]
+        e_mail = request.form["email"]
+        telefone1 = request.form["telefone1"]
+        telefone2 = request.form["telefone2"]
+        cep = request.form["cep"]
+        estado = request.form["estado"]
+        cidade = request.form["cidade"]
+        bairro = request.form["bairro"]
+        rua = request.form["rua"]
+        numero_casa = request.form["numero"]
+        complemento = request.form["complemento"]
+        pais = request.form["pais"]
+        referencia = request.form["referencia"]
+        cpf_paciente = request.form["cpf"]
         try:
-                usuarioBD.criar_usuario( email,senha,cpf)
-                session["mensagem"] = "usuario criado com sucesso!"
-                session["tipo_mensagem"] = "success"
+            usuarioBD.criar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
+            usuarioBD.criar_usuario(email, senha, FK_Paciente)
+            usuarioBD.criar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, referencia,cpf_paciente)
+            session["mensagem"] = "disponibilidade criado com sucesso!"
+            session["tipo_mensagem"] = "success"
         except Exception as e:
-                session["mensagem"] = f"Ocorreu um erro ao criar o usuario: {e}"
-                session["tipo_mensagem"] = "error"
-                
-        return redirect(url_for('disponibilidadeGet'))
+            session["mensagem"] = f"Ocorreu um erro ao criar a disponibilidade: {e}"
+            session["tipo_mensagem"] = "error"
+        print("deu certo")
+
+        return redirect(url_for('loginGet'))
+
+    else:
+        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
+        session["tipo_mensagem"] = "error"
+        print("deu erro")
+        return redirect("/login")
+    
+    
+    
+@app.post("/cadastro/atualizar")
+def contaAtualizar():
+    if "email" in session and session.get("nivel") == "secretaria":
+        email = request.form["email"]
+        senha = request.form["senha"]
+        FK_Paciente = request.form["cpf"]
+        cpf = request.form["cpf"]
+        nome = request.form["nome"]
+        data_nascimento = request.form["dataNascimento"]
+        e_mail = request.form["email"]
+        telefone1 = request.form["telefone1"]
+        telefone2 = request.form["telefone2"]
+        cep = request.form["cep"]
+        estado = request.form["estado"]
+        cidade = request.form["cidade"]
+        bairro = request.form["bairro"]
+        rua = request.form["rua"]
+        numero_casa = request.form["numero"]
+        complemento = request.form["complemento"]
+        pais = request.form["pais"]
+        referencia = request.form["referencia"]
+        cpf_paciente = request.form["cpf"]
+        try:
+            disponibilidadeBD.atualizar_usuario(email, senha, FK_Paciente)
+            disponibilidadeBD.atualizar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
+            disponibilidadeBD.atualizar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, referencia,cpf_paciente)
+            session["mensagem"] = "disponibilidade criado com sucesso!"
+            session["tipo_mensagem"] = "success"
+            return render_template("index.html")
+        except Exception as e:
+            session["mensagem"] = f"Ocorreu um erro ao criar a disponibilidade: {e}"
+            session["tipo_mensagem"] = "error"
+            return redirect("/login")
+
+    
 ############# Rotas de controle de acesso ##################
 @app.get("/login")
 def loginGet():

@@ -1,64 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
-    <link rel="stylesheet" href={{url_for("static", filename="Cadastro.css" )}}></head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro</title>
+  <link rel="stylesheet" href={{url_for("static", filename="Cadastro.css" )}}>
 </head>
+</head>
+
 <body>
-    
 
-        <div class="container">
-          <img class="img" src="{{url_for('static', filename='logo_do_site.jpg')}}" alt="logo">
+  <div class="container">
 
-            <form>
-                <label for="nomeCompleto">Nome Completo:</label>
-                <input type="text" id="nomeCompleto" name="nomeCompleto" required>
-                <br>
-                <label for="dataNascimento">Data de Nascimento:</label>
-                <input type="date" id="dataNascimento" name="dataNascimento" required>
-                <br>
-                <label for="email">Seu Email:</label>
-                <input type="email" id="email" required>
-                <br>
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" required>
-                <br>
-                <label for="telefone">Telefone:</label>
-                <input type="tel" id="telefone" name="telefone" required>
-                <br>
-                <label for="cpf">CPF:</label>
-                <input type="text" id="cpf" name="cpf" required>
+    <form action="/cadastro" method="POST" class="formServico">
+      <div class="country-select">
+        <img class="img" src="{{url_for('static', filename='logo_do_site.jpg')}}" alt="logo">
+      </div>
+      <h2>Cadastre sua Conta!</h2>
 
-                <label for="rua">Rua:</label>
-                <input type="text" id="rua" name="rua" required>
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" placeholder="Lucas Luiz" required>
+        <br>
+        <br>
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+        <br>
+        <br>
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento" placeholder="04/10/2000" required>
+        <br>
+        <br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" placeholder="lucasluiz@gamil.com" required>
+        <br>
+        <br>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" placeholder="12345" required>
+      </div>
 
-                <label for="bairro">Bairro:</label>
-                <input type="text" id="bairro" name="bairro" required>
-
-                <label for="estado">Estado:</label>
-                <input type="text" id="estado" name="estado" required>
-
-                <label for="cep">CEP:</label>
-                <input type="text" id="cep" name="cep" required>
-
-                <label for="complemento">Complemento:</label>
-                <input type="text" id="complemento" name="complemento" required>
-
-                <div class="col-12">
-                    <div class="form-check">
-                      <input onclick="bloquearCampos()" class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-                      <label class="form-check-label" for="invalidCheck">
-                        Meus dados estão corretos.
-                      </label>
-                    </div>
-
-                <br>              
-            </form>
-            <p> !!!!TEM QUE ARRUMAR!!!!  <button> <a href="{{ url_for('index') }}">Cadastre-se</a></button></p>
-
+      <div class="form-group">
+        <label for="telefone">Telefone 1:</label>
+        <div class="input-group">
+          <input type="int" id="telefone" name="telefone1" placeholder="+55-00000000000" required>
         </div>
+        <label for="telefone">Telefone 2:</label>
+        <div class="input-group">
+          <input type="int" id="telefone" name="telefone2" placeholder="+55-00000000000" required>
+        </div>
+      </div>
+
+      <h3>Endereço</h3>
+      <div class="address-form">
+        <div class="form-group">
+          <label for="cep">CEP:</label>
+          <input type="text" id="cep" name="cep" placeholder="50098-135" required>
+        </div>
+        <div class="form-group"></div>
+          <label for="pais">País:</label>
+          <input type="text" id="pais" name="pais" placeholder="Brasil" required>
+        </div>
+        <div class="form-group">
+          <label for="estado">Estado:</label>
+          <input type="text" id="estado" name="estado" placeholder="Pernambuco" required>
+        </div>
+        <div class="form-group">
+          <label for="cidade">Cidade:</label>
+          <input type="text" id="cidade" name="cidade" placeholder="Caruaru" required>
+        </div>
+        <div class="form-group">
+          <label for="bairro">Bairro:</label>
+          <input type="text" id="bairro" name="bairro" placeholder="Santa Rosa" required>
+        </div>
+        <div class="form-group">
+          <label for="rua">Rua:</label>
+          <input type="text" id="rua" name="rua" placeholder="5 TV Alfredo Pinto" required>
+        </div>
+        <div class="form-group">
+          <label for="numero">Número:</label>
+          <input type="text" id="numero" name="numero" placeholder="Digite SN se não houver número" required>
+        </div>
+        <div class="form-group">
+          <label for="complemento">Complemento:</label>
+          <textarea type="text" id="complemento" name="complemento" placeholder="Complemento (opcional)"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="referencia">Referencia:</label>
+          <textarea type="text" id="referencia" name="referencia" placeholder="Próximo da Feira da Sulanca"></textarea>
+          <div class="form-check">
+            <input onclick="bloquearCampos()" class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+            <label class="form-check-label" for="invalidCheck">
+              Meus dados estão corretos.
+            </label>
+          </div>
+          <button type="submit">Cadastre-se</button>
+        </div>
+      </div>
+  </div>
+  </form>
+  </div>
 
 </body>
+
 </html>

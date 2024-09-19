@@ -36,7 +36,7 @@ def atualizar_disponibilidade(idDisponibilidade, idMedicoNovo, horaInicioNovo,ho
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando_atualiza_disponibilidade = 'UPDATE disponibilidade SET FK_medico = %s, horario_inicio = %s,horario_inicio = %s,horario_inicio = %s,horario_inicio = %s WHERE id = %s'
+            comando_atualiza_disponibilidade = 'UPDATE disponibilidade SET FK_medico = %s, horario_inicio = %s,horario_fim= %s,tempo_consulta_min = %s,DiaAtendimento = %s WHERE id = %s'
             cursor.execute (comando_atualiza_disponibilidade, [idMedicoNovo, horaInicioNovo,horaFimNovo,tempConsultaNovo,diaSemanaNovo, idDisponibilidade])
             conexao.commit()
         except Error as e:
@@ -44,6 +44,7 @@ def atualizar_disponibilidade(idDisponibilidade, idMedicoNovo, horaInicioNovo,ho
         finally:
             cursor.close()
             conexao.close()
+
 
 def deletar_disponibilidade(id):
     conexao = BD.iniciarConexao()
