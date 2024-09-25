@@ -1,4 +1,5 @@
-from flask import Flask, send_from_directory, render_template, redirect, request, session, url_for
+from flask import Flask, send_from_directory, render_template, redirect, request, jsonify, session, url_for
+from flask_sqlalchemy import SQLAlchemy
 
 
 import model.gestaoBD as gestaoBD
@@ -7,6 +8,7 @@ import model.usuarioBD as usuarioBD
 import model.especialidadeBD as especialidadeBD
 import model.medicoBD as medicoBD
 import model.disponibilidade as disponibilidadeBD
+import model.agendarConsultaBD as agendarConsultaBD
 
 app = Flask(__name__)
 app.secret_key = "WagnerELucas"
@@ -150,14 +152,15 @@ def especialidadeDeletar():
 @app.get("/medicos")
 def medicosGet():
     medicos = medicoBD.listar_medico()
-    return render_template("gestao_medico.html", listaMedicos=medicos)
-
+    especialidades = especialidadeBD.listar_especialidade()
+    servicos = servicoBD.listar_servicos()
+    return render_template("gestao_medico.html", listaMedicos=medicos, listaEspecialidades=especialidades, listaServico=servicos)
 
 @app.post("/medico/cadastrar")
 def medicoCadrastar():
     nome = request.form["NOME"]
     crm = request.form["CRM"]
-    especialidades = request.form.getlist("especialidade")
+    especialidades = request.form.getlist("especialidades")
     servicos = request.form.getlist("servicos")
 
     idMedicoCadastrado = medicoBD.criar_medico(nome, crm)
@@ -170,9 +173,8 @@ def medicoAtualizar():
     id = request.form["IDMEDICO"]
     nome = request.form["NOME"]
     crm = request.form["CRM"]
-    novaEspecialidade = request.form["especialidade"]
-
-    especialidade = request.form.getlist("especialidade")
+    novaEspecialidade = request.form["especialidades"]
+    especialidade = request.form.getlist("especialidades")
     servicos = request.form.getlist("servicos")
     
     medicoBD.atualizar_medico(id,nome,crm,novaEspecialidade)
@@ -259,6 +261,20 @@ def disponibilidadeDeletar():
         session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
         session["tipo_mensagem"] = "error"
         return redirect("/login")
+############# Rotas de Agendamento ##################
+
+@app.get("/agendamento")
+def agendamentoGet():
+    idServico = request.args.get("servicos")
+    listaMedicosHorarios = []
+    servicos = agendarConsultaBD.listar_servicos()
+    if(idServico):
+        listaMedicosHorarios = medicoBD.getListaMedicoByServicos(idServico)
+    return render_template("agendamento.html", listaServico = servicos, listaMedicosHorarios = listaMedicosHorarios)
+
+
+
+
 
 ############# Rotas de Gestão ##################
 
@@ -268,10 +284,6 @@ def gestaoGet():
     return render_template("gestao_servico.html", listaServicos=servicos)
 
 ############# Rotas de controle de acesso ##################
-
-@app.route("/agendarConsulta")
-def agendarConsulta():
-        return render_template("agendamento.html")
     
 @app.route("/consultasAgendadas")
 def consultasAgendadas():
@@ -292,8 +304,11 @@ def usuario():
 ############# Rotas de Cadastro ##################
 
 @app.get("/cadastro")
+
 def cadastroGet():
-    return render_template("tela_cadastro.html")
+    disponibilidade = disponibilidadeBD.listar_disponibilidade()
+    return render_template("tela_cadastro.html", listaDisponibilidade=disponibilidade)
+
 
 @app.post("/cadastro")
 def contaCadastrar():

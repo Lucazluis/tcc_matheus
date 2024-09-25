@@ -149,3 +149,56 @@ def removerTodosOsServicosDoMedico(IdMedico):
 def atualizarListaServicosMedico(idMedico,listaServicos):
     removerTodosOsServicosDoMedico(idMedico)
     addServicosDoMedico(idMedico, listaServicos)
+    
+def getListaMedicoByServicos(idServico):
+    query = """
+
+SELECT 
+    m.nome,
+    m.crm,
+    e.descricao AS especialidade,
+    d.horario_inicio,
+    d.horario_fim,
+    d.tempo_consulta_min,
+    d.DiaAtendimento
+FROM 
+    medico_servico ms
+INNER JOIN medico m ON m.id = ms.FK_medico
+LEFT JOIN medico_especialidade me ON me.FK_medico = m.id
+LEFT JOIN especialidade e ON e.id = me.FK_especialidade
+LEFT JOIN disponibilidade d ON m.id = d.FK_medico
+WHERE 
+    ms.FK_servico = %s
+    """
+
+    
+    conexao = BD.iniciarConexao()
+    if conexao is not None:
+        try:
+            cursor = conexao.cursor()
+            cursor.execute(query, [idServico])
+            resultado = cursor.fetchall()
+            return resultado
+        except Error as e:
+            print(f"Erro ao executar o comando de inserção: {e}")
+        finally:
+            cursor.close()
+            conexao.close()
+            
+def getHorariosByMedicos(idDisponibilidade):
+    query = """
+            select * from disponibilidade d
+where d.FK_medico in (3, 14)
+    """
+    conexao = BD.iniciarConexao()
+    if conexao is not None:
+        try:
+            cursor = conexao.cursor()
+            cursor.execute(query, [idDisponibilidade])
+            resultado = cursor.fetchall()
+            return resultado
+        except Error as e:
+            print(f"Erro ao executar o comando de inserção: {e}")
+        finally:
+            cursor.close()
+            conexao.close()

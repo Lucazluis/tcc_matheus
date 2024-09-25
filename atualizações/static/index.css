@@ -39,7 +39,11 @@ p{
 .botao {
   background-color: #ADD8E6;
   border-radius: 6px;
-  font-size: 14px;
+  width: 15%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .topbody {

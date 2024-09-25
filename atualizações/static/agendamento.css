@@ -5,18 +5,20 @@ body {
   background-color: #f4f4f4;
 }
 
-header {
-  background-color: #007bff;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
-
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  justify-content: space-evenly;
+
+}
+
+.tabelaMedicos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:center;
+  width: 90%;
 }
 
 .search-bar {
@@ -45,11 +47,6 @@ header {
   cursor: pointer;
 }
 
-.content {
-  display: flex;
-  justify-content: space-between;
-  width: 80%;
-}
 
 .doctor-info {
   width: 40%;
@@ -66,58 +63,27 @@ header {
   margin-bottom: 10px;
 }
 
-.doctor-info h2 {
-  margin-bottom: 5px;
-}
 
-.doctor-info p {
-  margin-bottom: 10px;
-}
-
-.doctor-info .details {
-  margin-top: 20px;
-}
-
-.doctor-info .details .detail {
-  margin-bottom: 5px;
-}
-
-.schedule {
-  width: 40%;
-  padding: 20px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
-  background-color: white;
-}
-
-.schedule .calendar {
-  display: flex;
-  justify-content: space-between;
+.mapa {
+  height: 55%;
+  width:100%;
+  border-radius: 3%;
+  display:flex ;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-top: 4%;
 }
 
-.schedule .calendar button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
+label {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+  align-items: center;
 }
 
-.schedule .times {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
-
-.schedule .times button {
-  background-color: #ffc107;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-}
-

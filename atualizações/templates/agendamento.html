@@ -1,78 +1,71 @@
-{% extends "layout.html"%}
+{% extends "layout.html" %}
 
 {% block estilo %}
-<link rel="stylesheet" href={{url_for("static", filename="agendamento.css" )}}>
+<link rel="stylesheet" href="{{ url_for('static', filename='agendamento.css') }}">
 {% endblock %}
-
 
 {% block corpo %}
 
-
 <body>
+    {{listaMedicosHorarios}}
+
+
     <div class="container">
         <div class="search-bar">
-            <label for="especi">:</label>
-            <select class="tamanho" id="especialidade" name="especialidade">
-                {% for especialidade in listaEspecialidades %}
-                <option value={{especialidade[0]}}>{{especialidade[1]}}</option>
-                {% endfor %}
-            </select><br>            <button>Buscar</button>
+            <form action="/agendamento" method="get">
+                <label for="servicos">Selecione o seu Serviço:</label><br>
+                <select name="servicos" id="servicos">
+                    {% for servicos in listaServico %}
+                    <option value="{{ servicos[0] }}">{{ servicos[2] }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <button type="submit">Buscar</button>
+            </form>
         </div>
 
-        <div class="content">
+
+        {% if listaMedicosHorarios %}
+        <div class="tabelaMedicos">
+            {% for medicoHorario in listaMedicosHorarios %}
             <div class="doctor-info">
                 <img src="https://via.placeholder.com/150" alt="Foto do Médico">
-                <h2>Dr. Tiago Cavalcanti Iwanaga</h2>
-                <p>Cirurgião</p>
-                <p>Cirurgia Bariátrica</p>
-                <p>CRM: 17283 - PE</p>
-                <div class="details">
-                    <h3>Especialidades:</h3>
-                    <p>Cirurgia Bariátrica</p>
+                <h2>{{ medicoHorario[0] }}</h2>
+                <p>CRM: {{ medicoHorario[1] }}</p>
+                <div>
+                    <div>
+                        <h3>Especialidades:</h3>
+                        <p>{{ medicoHorario[2] }}</p>
+                    </div>
+                    <div class="calendar">
+                        <h3>Disponibilidades:</h3>
+                        <ul>
+                            {% for disponibilidade in medicoHorario %}
+                            <li>
+                                <button>
+                                    <Dia: {{ medicoHorario [6] }}<br>
+                                        Horário:{{ medicoHorario [3] }} - {{ medicoHorario [4] }}
+                                </button>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
+
             </div>
-
-            <div class="schedule">
-                <div class="calendar">
-                    <button>
-
-                    </button>
-                    <div>
-                        <p>SEX</p>
-                        <p>30 AGO</p>
-                    </div>
-                    <div>
-                        <p>SÁB</p>
-                        <p>31 AGO</p>
-                    </div>
-                    <div>
-                        <p>DOM</p>
-                        <p>01 SET</p>
-                    </div>
-                    <button>
-                        >
-                    </button>
-                </div>
-
-                <div class="times">
-                    <button>13:00</button>
-                    <button>13:40</button>
-                    <button>14:20</button>
-                    <button disabled>--</button>
-                    <button disabled>--</button>
-                    <button disabled>--</button>
-                    <button disabled>--</button>
-                    <button disabled>--</button>
-                    <button disabled>--</button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-
- 
+        {% endif %}
     </div>
+    <div class="mapa">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.206524404726!2d-34.88679098505967!3d-8.060289676626722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab220c3425f397%3A0xa3301c032a00803e!2sCasa+Amarela%2C+Recife%2C+PE!5e0!3m2!1spt-BR!2sbr!4v1694405773685!5m2!1spt-BR!2sbr"
+            width="70%" height="500" justify-content: center; loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
     </div>
+</body>
+{% endblock %}
 
-    {% endblock %}
-
-    {% block js %}
-    {% endblock %}
+{% block js %}
+{% endblock %}

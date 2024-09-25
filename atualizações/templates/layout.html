@@ -27,12 +27,12 @@
       </div>
       {% endif %}
       {% if ("nivel" in session and (session["nivel"] != "secretaria")) %}
-      <a href="/agendarConsulta">Agendar Consultas </a>
+      <a href="{{url_for('agendamentoGet')}}">Agendar Consultas </a>
       {% endif %}
       {% if ("nivel" in session and (session["nivel"] == "secretaria" or session["nivel"] == "paciente")) %}
       <a href="/consultasAgendadas">Consultas Agendadas</a>
-      {% endif %}
       <a href="/usuario">Perfil de usuario</a>
+      {% endif %}
       <a href="/sobre">Sobre</a>
       <a href="/contato">Contato</a>
       {% if "nivel" not in session %}

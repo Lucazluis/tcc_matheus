@@ -60,3 +60,13 @@ def deletar_disponibilidade(id):
             cursor.close()
             conexao.close()
 
+
+
+
+
+######################## modificado
+
+def get_available_time_slots(doctor_id,db, Schedule):
+    # Consulta o banco de dados para recuperar a lista de horários disponíveis para o médico
+    time_slots = db.session.query(Schedule).filter(Schedule.doctor_id == doctor_id).all()
+    return time_slots

@@ -1,6 +1,7 @@
 import model.BD as BD
 from mysql.connector import Error
 
+
 def criar_servico(descricao, nomeServico):
     conexao = BD.iniciarConexao()
     if conexao is not None:
@@ -58,3 +59,7 @@ def deletar_servico(id_servico):
         finally:
             cursor.close()
             conexao.close()
+            
+            
+            
+            

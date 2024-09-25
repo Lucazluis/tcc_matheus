@@ -11,4 +11,14 @@ def servicosAgendamento():
     
     print(resultados)
     
-servicosAgendamento()
+def listar_servicos():
+    conexao  = BD.iniciarConexao()
+    cursor = conexao.cursor()
+    query = "SELECT * FROM servico"
+
+    cursor.execute(query)
+    resultados = cursor.fetchall()
+    
+    print(resultados)
+    
+listar_servicos()
