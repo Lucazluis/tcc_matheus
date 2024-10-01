@@ -1,5 +1,6 @@
 import model.BD as BD
 from mysql.connector import Error
+from datetime import *
 
 def criar_medico(nome, crm):
     conexao = BD.iniciarConexao()
@@ -152,23 +153,35 @@ def atualizarListaServicosMedico(idMedico,listaServicos):
     
 def getListaMedicoByServicos(idServico):
     query = """
-
-SELECT 
+    select
+    m.id,
     m.nome,
     m.crm,
-    e.descricao AS especialidade,
+
+    
+    (select GROUP_CONCAT(se.descricao)
+		from medico_especialidade sme
+	 left join especialidade se
+	 on se.id = sme.FK_especialidade
+
+	 where sme.FK_medico = m.id) AS especialidade,
+    d.DiaAtendimento,
     d.horario_inicio,
     d.horario_fim,
-    d.tempo_consulta_min,
-    d.DiaAtendimento
-FROM 
-    medico_servico ms
-INNER JOIN medico m ON m.id = ms.FK_medico
-LEFT JOIN medico_especialidade me ON me.FK_medico = m.id
-LEFT JOIN especialidade e ON e.id = me.FK_especialidade
-LEFT JOIN disponibilidade d ON m.id = d.FK_medico
-WHERE 
-    ms.FK_servico = %s
+    d.tempo_consulta_min
+    
+  
+    
+     
+	from medico_servico ms
+
+	left join medico m
+	on m.id = ms.FK_medico
+ 
+    left join disponibilidade d
+    on d.FK_medico = m.id
+
+	where ms.FK_servico = %s and d.id is not null;
     """
 
     
@@ -178,27 +191,51 @@ WHERE
             cursor = conexao.cursor()
             cursor.execute(query, [idServico])
             resultado = cursor.fetchall()
-            return resultado
+            return ajusteDadosDisponibilidade(resultado)
         except Error as e:
             print(f"Erro ao executar o comando de inserção: {e}")
         finally:
             cursor.close()
             conexao.close()
             
-def getHorariosByMedicos(idDisponibilidade):
-    query = """
-            select * from disponibilidade d
-where d.FK_medico in (3, 14)
-    """
-    conexao = BD.iniciarConexao()
-    if conexao is not None:
-        try:
-            cursor = conexao.cursor()
-            cursor.execute(query, [idDisponibilidade])
-            resultado = cursor.fetchall()
-            return resultado
-        except Error as e:
-            print(f"Erro ao executar o comando de inserção: {e}")
-        finally:
-            cursor.close()
-            conexao.close()
+def ajusteDadosDisponibilidade(lista):
+    novaLista = []
+    for row in lista:
+        resultado = getIndexMedicoJaExistente(row[0], novaLista)
+        if(getIndexMedicoJaExistente(row[0], novaLista) is not False):
+            novaLista[resultado][4] = novaLista[resultado][4] + getHorarios(row[5],row[6],row[7], row[4])
+        else:
+            temp = []
+            horarios = getHorarios(row[5],row[6],row[7], row[4])
+            for n in range(4):
+                temp.append(row[n])
+            temp.append(horarios)
+            novaLista.append(temp)
+    return novaLista
+
+def getIndexMedicoJaExistente(id, novaLista):
+    for i in range(len(novaLista)):
+        if(id in novaLista[i]):
+            return i
+    return False
+
+def getHorarios(inicio, fim, intervalo, dia):
+    delta = timedelta(minutes=intervalo)
+    listaHorario = []
+    while(inicio <= fim):
+        listaHorario.append([dia, format_timedelta_to_HHMMSS(inicio)])
+        inicio = inicio + delta
+    return listaHorario
+    
+def format_timedelta_to_HHMMSS(td):
+    td_in_seconds = td.total_seconds()
+    hours, remainder = divmod(td_in_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    hours = int(hours)
+    minutes = int(minutes)
+    seconds = int(seconds)
+    if minutes < 10:
+        minutes = "0{}".format(minutes)
+    if seconds < 10:
+        seconds = "0{}".format(seconds)
+    return "{}:{}".format(hours, minutes)

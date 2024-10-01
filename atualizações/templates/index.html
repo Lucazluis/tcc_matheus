@@ -2,46 +2,63 @@
 
 {% block estilo %}
 <link rel="stylesheet" href="{{url_for('static', filename='index.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='estilo_mensagem.css')}}">
 {% endblock %}
 
 
 {% block corpo %}
 
-<div class="topbody">
-  <img class="img" src="{{url_for('static', filename='logo_do_site.jpg')}}" alt="logo">
-  <h2 class="titulo">Algumas das especialidades das clínicas disponiveis em nosso site </h2>
-</div>
+<body>
 
-<div class="table">
-  <div class="service">
-    <h3>Limpeza Dental</h3>
-    <p>Durante a limpeza dental, removemos placas bacterianas e tártaros dos seus dentes usando ferramentas
-      especiais. Depois, polimos os dentes para deixá-los lisos e brilhantes. Se necessário, aplicamos flúor para
-      proteger contra cáries. É um procedimento simples e importante para manter sua boca saudável!.</p>
-    <button class="botao"> <a href="{{ url_for('loginGet') }}">Agendar</a></button>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="caixa"> 
+    {% for message in messages %}
+      <ul>
+        <li>{{ message }}</li>
+      </ul>
+      <a href="{{ url_for('index') }}"><button class="botao">ok</button></a>
+    {% endfor %}
   </div>
-  <div class="service">
-    <h3>Extração de Dente</h3>
-    <p>Durante uma extração dental, removemos o dente afetado sob anestesia local. O procedimento pode envolver
-      alguma pressão e barulho, mas não é doloroso. Após a remoção, limpamos a área e fornecemos orientações para
-      cuidados pós-operatórios.</p>
-    <button class="botao"> <a href="{{ url_for('loginGet') }}">Agendar</a></button>
-  </div>
-</div>
+  {% endif %}
+{% endwith %}
 
-<div class="tabela">
-  <div class="service">
-    <h3>Exame de rotina</h3>
-    <p>Nos exames de rotinas que iremos conseguir identificar se tem algo que precisse ser tratado, podemos
-      identificar caries, doença periodental e outros problemas dentarios.</p>
-    <button class="botao"> <a href="{{ url_for('loginGet') }}">Agendar</a></button>
-  </div>
-  <div class="service">
-    <h3>Tratamento de caries</h3>
-    <p>O tratamento de caries envolve a remoção do tecido dental danificado e a restauração do dente com materiais
-      como resina composta, amálgama ou porcelana.</p>
-    <button class="botao"> <a href="{{ url_for('loginGet') }}">Agendar</a></button>
-  </div>
-</div>
+  <div class="container">
+    <div class="topbody">
+      <img class="img" src="{{url_for('static', filename='logo_do_site.jpg')}}" alt="logo">
+      <h2 class="titulo">Algumas de nossas especialidades em nosso site </h2>
+    </div>
 
+    <div class="service-grid">
+      <div class="service">
+        <h3>Limpeza Dental</h3>
+        <p>Durante a limpeza dental, removemos placas bacterianas e tártaros dos seus dentes usando ferramentas
+          especiais. Depois, polimos os dentes para deixá-los lisos e brilhantes. Se necessário, aplicamos flúor para
+          proteger contra cáries. É um procedimento simples e importante para manter sua boca saudável!.</p>
+        <a href="{{ url_for('loginGet') }}"><button class="botao">Agendar</button></a>
+      </div>
+      <div class="service">
+        <h3>Extração de Dente</h3>
+        <p>Durante uma extração dental, removemos o dente afetado sob anestesia local. O procedimento pode envolver
+          alguma pressão e barulho, mas não é doloroso. Após a remoção, limpamos a área e fornecemos orientações para
+          cuidados pós-operatórios.</p>
+        <a href="{{ url_for('loginGet') }}"><button class="botao">Agendar</button></a>
+      </div>
+
+      <div class="service">
+        <h3>Exame de rotina</h3>
+        <p>Nos exames de rotinas que iremos conseguir identificar se tem algo que precisse ser tratado, podemos
+          identificar caries, doença periodental e outros problemas dentarios.</p>
+        <a href="{{ url_for('loginGet') }}"><button class="botao">Agendar</button></a>
+      </div>
+      <div class="service">
+        <h3>Tratamento de caries</h3>
+        <p>O tratamento de caries envolve a remoção do tecido dental danificado e a restauração do dente com materiais
+          como resina composta, amálgama ou porcelana.</p>
+        <a href="{{ url_for('loginGet') }}"><button class="botao">Agendar</button></a>
+      </div>
+    </div>
+  </div>
+  </div>
+</body>
 {% endblock %}

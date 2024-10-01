@@ -6,11 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro</title>
   <link rel="stylesheet" href={{url_for("static", filename="Cadastro.css" )}}>
-</head>
+  <link rel="stylesheet" href="{{url_for('static', filename='estilo_mensagem.css')}}">
 </head>
 
 <body>
 
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="caixa"> 
+    {% for message in messages %}
+      <ul>
+        <li>{{ message }}</li>
+      </ul>
+      <a href="{{ url_for('index') }}"><button class="botao">ok</button></a>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+  {% for message in get_flashed_messages() %}
+  <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
   <div class="container">
 
     <form action="/cadastro" method="POST" class="formServico">
@@ -58,45 +74,48 @@
           <input type="text" id="cep" name="cep" placeholder="50098-135" required>
         </div>
         <div class="form-group"></div>
-          <label for="pais">País:</label>
-          <input type="text" id="pais" name="pais" placeholder="Brasil" required>
-        </div>
-        <div class="form-group">
-          <label for="estado">Estado:</label>
-          <input type="text" id="estado" name="estado" placeholder="Pernambuco" required>
-        </div>
-        <div class="form-group">
-          <label for="cidade">Cidade:</label>
-          <input type="text" id="cidade" name="cidade" placeholder="Caruaru" required>
-        </div>
-        <div class="form-group">
-          <label for="bairro">Bairro:</label>
-          <input type="text" id="bairro" name="bairro" placeholder="Santa Rosa" required>
-        </div>
-        <div class="form-group">
-          <label for="rua">Rua:</label>
-          <input type="text" id="rua" name="rua" placeholder="5 TV Alfredo Pinto" required>
-        </div>
-        <div class="form-group">
-          <label for="numero">Número:</label>
-          <input type="text" id="numero" name="numero" placeholder="Digite SN se não houver número" required>
-        </div>
-        <div class="form-group">
-          <label for="complemento">Complemento:</label>
-          <textarea type="text" id="complemento" name="complemento" placeholder="Complemento (opcional)"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="referencia">Referencia:</label>
-          <textarea type="text" id="referencia" name="referencia" placeholder="Próximo da Feira da Sulanca"></textarea>
-          <div class="form-check">
-            <input onclick="bloquearCampos()" class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-            <label class="form-check-label" for="invalidCheck">
-              Meus dados estão corretos.
-            </label>
-          </div>
-          <button type="submit">Cadastre-se</button>
-        </div>
+        <label for="pais">País:</label>
+        <input type="text" id="pais" name="pais" placeholder="Brasil" required>
       </div>
+      <div class="form-group">
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" placeholder="Pernambuco" required>
+      </div>
+      <div class="form-group">
+        <label for="cidade">Cidade:</label>
+        <input type="text" id="cidade" name="cidade" placeholder="Caruaru" required>
+      </div>
+      <div class="form-group">
+        <label for="bairro">Bairro:</label>
+        <input type="text" id="bairro" name="bairro" placeholder="Santa Rosa" required>
+      </div>
+      <div class="form-group">
+        <label for="rua">Rua:</label>
+        <input type="text" id="rua" name="rua" placeholder="Oriental" required>
+      </div>
+      <div class="form-group">
+        <label for="numero">Número:</label>
+        <input type="text" id="numero" name="numero" placeholder="Digite SN se não houver número" required>
+      </div>
+      <div class="form-group">
+        <label for="complemento">Complemento:</label>
+        <textarea type="text" id="complemento" name="complemento"
+          placeholder="Complemento (casa,apartamento...)"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="referencia">Referencia:</label>
+        <textarea type="text" id="referencia" name="referencia" placeholder="Próximo da Feira da Sulanca"></textarea>
+        <div class="form-check">
+          <input onclick="bloquearCampos()" class="form-check-input" type="checkbox" value="" id="invalidCheck"
+            required>
+          <label class="form-check-label" for="invalidCheck">
+            Meus dados estão corretos.
+          </label>
+        </div>
+        <br>
+        <button type="submit">Cadastre-se</button>
+      </div>
+  </div>
   </div>
   </form>
   </div>

@@ -1,0 +1,38 @@
+.caixa {
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: #8f8f8f;
+    color: #fff;
+    border-radius: 5%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .caixa li {
+    margin-bottom: 10px;
+    justify-items: center ;
+    font-size: 30px;
+  }
+  
+  .caixa div {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .caixa button {
+    background-color: #87ceeb;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    border-radius: 5%;
+    cursor: pointer;
+  }

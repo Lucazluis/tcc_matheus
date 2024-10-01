@@ -2,11 +2,25 @@
 
 {% block estilo %}
 <link rel="stylesheet" href={{url_for("static", filename="gestao.css" )}}>
+<link rel="stylesheet" href="{{url_for('static', filename='estilo_mensagem.css')}}">
 {% endblock %}
 
 {% block corpo %}
 
 <body>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="caixa"> 
+      {% for message in messages %}
+        <ul>
+          <li>{{ message }}</li>
+        </ul>
+        <a href="{{ url_for('index') }}"><button class="botao">ok</button></a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
 
     <h1 class="titulo">Gerenciamento de Médicos</h1>
     <div class="container">
@@ -21,13 +35,13 @@
             <label for="CRM">CRM:</label>
             <input type="text" id="CRM" name="CRM" required><br>
             <label for="especialidades">Especialidades do medico:</label><br>
-            <select name="especialidades" id="especialidades" >
+            <select name="especialidades" id="especialidades">
                 {% for especialidade in listaEspecialidades %}
                 <option value={{especialidade[0]}}>{{especialidade[1]}}</option>
                 {% endfor %}
             </select><br>
             <label for="servicos">Serviços prestados pelo medico:</label><br>
-            <select name="servicos" id="servicos" >
+            <select name="servicos" id="servicos">
                 {% for servico in listaServico %}
                 <option value={{servico[0]}}>{{servico[2]}}</option>
                 {% endfor %}
@@ -46,13 +60,13 @@
             <label for="CRM">CRM:</label>
             <input type="text" id="CRM" name="CRM" required><br>
             <label for="especialidades">Especialidades do medico:</label><br>
-            <select name="especialidades" id="especialidades" >
+            <select name="especialidades" id="especialidades">
                 {% for especialidade in listaEspecialidades %}
                 <option value={{especialidade[0]}}>{{especialidade[1]}}</option>
                 {% endfor %}
             </select><br>
             <label for="servicos">Serviços prestados pelo medico:</label><br>
-            <select name="servicos" id="servicos" >
+            <select name="servicos" id="servicos">
                 {% for servico in listaServico %}
                 <option value={{servico[0]}}>{{servico[2]}}</option>
                 {% endfor %}
@@ -71,7 +85,7 @@
         <br>
         <hr>
         <br>
-        <table  id border="1">
+        <table id border="1">
             <thead>
                 <td>Id</td>
                 <td>Nome Médico</td>

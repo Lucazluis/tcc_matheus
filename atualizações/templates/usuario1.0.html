@@ -2,11 +2,25 @@
 
 {% block estilo %}
 <link rel="stylesheet" href={{url_for("static", filename="usuario.css" )}}>
+<link rel="stylesheet" href="{{url_for('static', filename='estilo_mensagem.css')}}">
 {% endblock %}
 
 {% block corpo %}
 
 <body>
+  
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="caixa"> 
+    {% for message in messages %}
+      <ul>
+        <li>{{ message }}</li>
+      </ul>
+      <a href="{{ url_for('index') }}"><button class="botao">ok</button></a>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
 
   <head>
     <title>Tela de Usuário</title>

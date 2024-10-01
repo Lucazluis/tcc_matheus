@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, render_template, redirect, request, jsonify, session, url_for
+from flask import Flask, render_template, redirect, request, session, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -21,35 +21,28 @@ def index():
     return render_template("index.html")
 
 ############# Rotas de serviço ##################
-
-
-@app.get("/servico")
+@app.route("/servico")
 def servicosGet():
     servicos = servicoBD.listar_servicos()
     return render_template("gestao_servico.html", listaServicos=servicos)
 
-
-@app.post("/servico/cadastrar")
+@app.route("/servico/cadastrar", methods=["POST"])
 def servicoCadastrar():
     if "email" in session and session.get("nivel") == "secretaria":
         servico = request.form["Servico"]
         descricao = request.form["Descrição"]
         try:
             servicoBD.criar_servico(descricao, servico)
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Serviço criado com sucesso!", "success")  # Mensagem flash
+            return redirect("/gestao")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
-
-        return redirect("/gestao")
+            flash(f"Ocorreu um erro ao criar o serviço: {e}", "error")
+            return redirect("/gestao") 
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
-
-@app.post("/servico/atualizar")
+@app.route("/servico/atualizar", methods=["POST"])
 def servicoAtualizar():
     if "email" in session and session.get("nivel") == "secretaria":
         id = request.form["id"]
@@ -57,36 +50,33 @@ def servicoAtualizar():
         descricao = request.form["Descrição"]
         try:
             servicoBD.atualizar_servico(int(id), descricao, servico)
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Serviço atualizado com sucesso!", "success")
             return redirect("/gestao")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
-            return redirect("/login")
+            flash(f"Ocorreu um erro ao atualizar o serviço: {e}", "error")
+            return redirect("/gestao") 
+    else:
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
+        return redirect("/login")
 
 
-@app.post("/servico/deletar")
+@app.route("/servico/deletar", methods=["POST"])
 def servicoDeletar():
     if "email" in session and session.get("nivel") == "secretaria":
         id = request.form["id"]
 
         try:
             servicoBD.deletar_servico(int(id))
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Serviço deletado com sucesso!", "success") 
+            return redirect("/gestao")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
-
-        return redirect("/gestao")
+            flash(f"Ocorreu um erro ao deletar o serviço: {e}", "error") 
+            return redirect("/gestao")
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
-        return redirect("/login")
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error") 
+        return redirect("/login") 
 
 ############# Rotas de Especialidades ##################
-
 
 @app.get("/especialidades")
 def especialidadeGet():
@@ -100,16 +90,13 @@ def especialidadeCadastrar():
         descricao = request.form["Descrição"]
         try:
             especialidadeBD.criar_especialidade(descricao)
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Especialidade criada com sucesso!", "success")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao criar a especialidade: {e}", "error")
 
         return redirect(url_for('especialidadeGet'))
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
 
@@ -120,12 +107,10 @@ def especialidadeAtualizar():
         descricao = request.form["Descricao"]
         try:
             especialidadeBD.atualizar_especialidade(int(id), descricao)
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Especialidade atualizada com sucesso!", "success")
             return redirect(url_for('especialidadeGet'))
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao atualizar a especialidade: {e}", "error")
             return redirect("/login")
 
 
@@ -136,19 +121,17 @@ def especialidadeDeletar():
 
         try:
             especialidadeBD.deletar_especialidade(int(id))
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Especialidade deletada com sucesso!", "success")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao deletar a especialidade: {e}", "error")
 
         return redirect(url_for('especialidadeGet'))
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
 ############# Rotas de Medico ##################
+
 @app.get("/medicos")
 def medicosGet():
     medicos = medicoBD.listar_medico()
@@ -163,9 +146,14 @@ def medicoCadrastar():
     especialidades = request.form.getlist("especialidades")
     servicos = request.form.getlist("servicos")
 
-    idMedicoCadastrado = medicoBD.criar_medico(nome, crm)
-    medicoBD.addEspecialidadesDoMedico(idMedicoCadastrado, especialidades)
-    medicoBD.addServicosDoMedico(idMedicoCadastrado, servicos)
+    try:
+        idMedicoCadastrado = medicoBD.criar_medico(nome, crm)
+        medicoBD.addEspecialidadesDoMedico(idMedicoCadastrado, especialidades)
+        medicoBD.addServicosDoMedico(idMedicoCadastrado, servicos)
+        flash("Médico cadastrado com sucesso!", "success")
+    except Exception as e:
+        flash(f"Ocorreu um erro ao cadastrar o médico: {e}", "error")
+
     return redirect(url_for('medicosGet'))
 
 @app.post("/medico/atualizar")
@@ -177,18 +165,28 @@ def medicoAtualizar():
     especialidade = request.form.getlist("especialidades")
     servicos = request.form.getlist("servicos")
     
-    medicoBD.atualizar_medico(id,nome,crm,novaEspecialidade)
-    medicoBD.atualizarEspecialidadesMedico(id,especialidade)
-    medicoBD.atualizarListaServicosMedico(id,servicos)
+    try:
+        medicoBD.atualizar_medico(id,nome,crm,novaEspecialidade)
+        medicoBD.atualizarEspecialidadesMedico(id,especialidade)
+        medicoBD.atualizarListaServicosMedico(id,servicos)
+        flash("Médico atualizado com sucesso!", "success")
+    except Exception as e:
+        flash(f"Ocorreu um erro ao atualizar o médico: {e}", "error")
+
     return redirect(url_for('medicosGet'))
 
 @app.post("/medico/deletar")
 def medicoDelatar():
     id = request.form["IDMEDICO"]
-    medicoBD.deletar_medico(id)
-    medicoBD.removerTodasEspecialidadesDoMedico(id)
-    medicoBD.removerTodosOsServicosDoMedico(id)
     
+    try:
+        medicoBD.deletar_medico(id)
+        medicoBD.removerTodasEspecialidadesDoMedico(id)
+        medicoBD.removerTodosOsServicosDoMedico(id)
+        flash("Médico deletado com sucesso!", "success")
+    except Exception as e:
+        flash(f"Ocorreu um erro ao deletar o médico: {e}", "error")
+
     return redirect(url_for('medicosGet'))
 
 ############# Rotas de Dispoonibilidade ##################
@@ -207,19 +205,17 @@ def disponibilidadeCadastrar():
         horario_fim = request.form["horaFim"]
         tempo_consulta_min = request.form["tempo"]
         DiaAtendimento = request.form["dia"]
+        dataDisponivel = request.form["data"]
         
         try:
-            disponibilidadeBD.criar_disponibilidade( int(FK_medico), horario_inicio,horario_fim,tempo_consulta_min,DiaAtendimento)
-            session["mensagem"] = "disponibilidade criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            disponibilidadeBD.criar_disponibilidade( int(FK_medico), horario_inicio,horario_fim,tempo_consulta_min,DiaAtendimento,dataDisponivel)
+            flash("Disponibilidade criada com sucesso!", "success")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar a disponibilidade: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao criar a disponibilidade: {e}", "error")
 
         return redirect(url_for('disponibilidadeGet'))
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
 
@@ -232,14 +228,14 @@ def disponibilidadeAtualizar():
         horario_fim = request.form["horaFim"]
         tempo_consulta_min = request.form["tempo"]
         DiaAtendimento = request.form["dia"]
+        dataDisponivel = request.form["data"]
+
         try:
-            disponibilidadeBD.atualizar_disponibilidade(int(id), int(FK_medico),horario_inicio,horario_fim,int(tempo_consulta_min),DiaAtendimento)
-            session["mensagem"] = "disponibilidade criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            disponibilidadeBD.atualizar_disponibilidade(int(id), int(FK_medico),horario_inicio,horario_fim,int(tempo_consulta_min),DiaAtendimento,dataDisponivel)
+            flash("Disponibilidade atualizada com sucesso!", "success")
             return redirect(url_for('disponibilidadeGet'))
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar a disponibilidade: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao atualizar a disponibilidade: {e}", "error")
             return redirect("/login")
 
 
@@ -250,28 +246,30 @@ def disponibilidadeDeletar():
 
         try:
             disponibilidadeBD.deletar_disponibilidade(int(id))
-            session["mensagem"] = "Serviço criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Disponibilidade deletada com sucesso!", "success")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar o serviço: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao deletar a disponibilidade: {e}", "error")
 
         return redirect(url_for('disponibilidadeGet'))
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 ############# Rotas de Agendamento ##################
 
 @app.get("/agendamento")
 def agendamentoGet():
     idServico = request.args.get("servicos")
-    listaMedicosHorarios = []
     servicos = agendarConsultaBD.listar_servicos()
+    listaMedicosHorarios = []
+    
     if(idServico):
         listaMedicosHorarios = medicoBD.getListaMedicoByServicos(idServico)
     return render_template("agendamento.html", listaServico = servicos, listaMedicosHorarios = listaMedicosHorarios)
 
+
+
+
+# tem que complementar
 
 
 
@@ -306,13 +304,12 @@ def usuario():
 @app.get("/cadastro")
 
 def cadastroGet():
-    disponibilidade = disponibilidadeBD.listar_disponibilidade()
-    return render_template("tela_cadastro.html", listaDisponibilidade=disponibilidade)
+    return render_template("tela_cadastro.html")
 
 
 @app.post("/cadastro")
 def contaCadastrar():
-    if "email" in session and session.get("nivel") == "paciente":
+    if 1==1:
         email = request.form["email"]
         senha = request.form["senha"]
         FK_Paciente = request.form["cpf"]
@@ -336,21 +333,17 @@ def contaCadastrar():
             usuarioBD.criar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
             usuarioBD.criar_usuario(email, senha, FK_Paciente)
             usuarioBD.criar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, referencia,cpf_paciente)
-            session["mensagem"] = "disponibilidade criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Cadastro realizado com sucesso!", "success")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar a disponibilidade: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao realizar o cadastro: {e}", "error")
         print("deu certo")
 
         return redirect(url_for('loginGet'))
 
     else:
-        session["mensagem"] = "Você precisa estar logado como secretaria para realizar esta ação."
-        session["tipo_mensagem"] = "error"
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         print("deu erro")
-        return redirect("/login")
-    
+        return redirect("/erro")
     
     
 @app.post("/cadastro/atualizar")
@@ -379,16 +372,37 @@ def contaAtualizar():
             disponibilidadeBD.atualizar_usuario(email, senha, FK_Paciente)
             disponibilidadeBD.atualizar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
             disponibilidadeBD.atualizar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, referencia,cpf_paciente)
-            session["mensagem"] = "disponibilidade criado com sucesso!"
-            session["tipo_mensagem"] = "success"
+            flash("Cadastro atualizado com sucesso!", "success")
             return render_template("index.html")
         except Exception as e:
-            session["mensagem"] = f"Ocorreu um erro ao criar a disponibilidade: {e}"
-            session["tipo_mensagem"] = "error"
+            flash(f"Ocorreu um erro ao atualizar o cadastro: {e}", "error")
             return redirect("/login")
-
     
 ############# Rotas de controle de acesso ##################
+# @app.get("/login")
+# def loginGet():
+#     return render_template("tela_login.html")
+
+
+# @app.post("/login")
+# def loginPost():
+#     email = request.form["email"]
+#     senha = request.form["senha"]
+#     usuario = usuarioBD.pegarUsuario(email)
+#     if (email == usuario[1] and senha == usuario[2]):
+#         session["nivel"] = usuario[3]
+#         session["email"] = usuario[1]
+#         return redirect("/")
+#     else:
+#         return redirect("/login")
+
+
+# @app.route("/logout")
+# def logout():
+#     session.clear()
+#     return redirect("/")
+
+
 @app.get("/login")
 def loginGet():
     return render_template("tela_login.html")
@@ -402,19 +416,20 @@ def loginPost():
     if (email == usuario[1] and senha == usuario[2]):
         session["nivel"] = usuario[3]
         session["email"] = usuario[1]
+        flash("Login realizado com sucesso!", "success")
         return redirect("/")
     else:
+        flash("E-mail ou senha incorretos.", "error")
         return redirect("/login")
 
 
 @app.route("/logout")
 def logout():
     session.clear()
+    flash("Você foi deslogado com sucesso!", "success")
     return redirect("/")
 
-
 app.run(debug=True)
-
 
 
 
