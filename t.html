@@ -1,30 +1,102 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caixa de Confirmação</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Calendário de Disponibilidade</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+<style>.calendario {
+    width: 80%;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .calendario h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .calendario table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .calendario th, .calendario td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .calendario th {
+    background-color: #f0f0f0;
+  }
+  
+  .btn-disponivel {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .btn-disponivel:hover {
+    background-color: #3e8e41;
+  }
+  
+  .btn-indisponivel {
+    background-color: #FFC107;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: not-allowed;
+  }
+  
+  .btn-indisponivel:hover {
+    background-color: #FFC107;
+  }</style>
 <body>
-
-    {% block content %}{% endblock %}
-
-    <div id="confirmacaoModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="close">&times;</span>
-                <h2>Mudar Senha</h2> 
-            </div>
-            <div class="modal-body">
-                <p>A senha que você usou foi encontrada em um vazamento de dados. É altamente recomendável que você altere sua senha imediatamente.</p>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelarBtn">Cancelar</button>
-                <a href="{{ url_for('mudar_senha') }}"><button id="confirmarBtn">Mudar Senha</button></a> 
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Código JavaScript para abrir/fechar o modal content is not safe and I can't generate an answer for your request
+  <div class="calendario">
+    <h2>Calendário de Disponibilidade</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Dia</th>
+          <th>Horário</th>
+          <th>Disponibilidade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Segunda-feira</td>
+          <td>08:00 - 12:00</td>
+          <td><button class="btn-disponivel">Reservar</button></td>
+        </tr>
+        <tr>
+          <td>Terça-feira</td>
+          <td>13:00 - 17:00</td>
+          <td><button class="btn-indisponivel" disabled>Indisponível</button></td>
+        </tr>
+        <tr>
+          <td>Quarta-feira</td>
+          <td>08:00 - 12:00</td>
+          <td><button class="btn-disponivel">Reservar</button></td>
+        </tr>
+        <tr>
+          <td>Quinta-feira</td>
+          <td>13:00 - 17:00</td>
+          <td><button class="btn-indisponivel" disabled>Indisponível</button></td>
+        </tr>
+        <tr>
+          <td>Sexta-feira</td>
+          <td>08:00 - 12:00</td>
+          <td><button class="btn-disponivel">Reservar</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

@@ -255,24 +255,82 @@ def disponibilidadeDeletar():
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 ############# Rotas de Agendamento ##################
-
 @app.get("/agendamento")
 def agendamentoGet():
     idServico = request.args.get("servicos")
     servicos = agendarConsultaBD.listar_servicos()
     listaMedicosHorarios = []
+    disponibilidade = []
+
+    if idServico:  # Check if idServico is not empty
+        try:
+            idServico = int(idServico)  # Try to convert idServico to an integer
+            listaMedicosHorarios = medicoBD.getListaMedicoByServicos(idServico)
+            # You might need to populate disponibilidade based on idServico
+            # For example:
+            # disponibilidade = get_disponibilidade_by_servico(idServico)
+        except ValueError:
+            # Handle the case where idServico is not a valid integer
+            flash("Invalid servico ID")
+            return redirect(url_for("agendamentoGet"))
+
+    return render_template("agendamento.html", 
+                           listaServico = servicos, 
+                           listaMedicosHorarios = listaMedicosHorarios, 
+                           disponibilidade = disponibilidade)
+
+@app.route('/agendamento', methods=['GET', 'POST'])
+def agendamento():
+    if request.method == 'POST':
+        id_servico = request.form['servicos']
+        listaMedicosHorarios = medicoBD.getListaMedicoByServicos(id_servico)
+        return render_template('agendamento.html', listaMedicosHorarios=listaMedicosHorarios, listaServico=servicoBD.listar_servicos())
     
-    if(idServico):
-        listaMedicosHorarios = medicoBD.getListaMedicoByServicos(idServico)
-    return render_template("agendamento.html", listaServico = servicos, listaMedicosHorarios = listaMedicosHorarios)
+    return render_template('agendamento.html', listaServico=servicoBD.listar_servicos())
 
+@app.route('/agendar', methods=['POST'])
+def agendar():
+    id_medico = request.form['id_medico']
+    id_servico = request.form['id_servico']
+    data = request.form['data']
+    hora_inicio = request.form['hora_inicio']
+    hora_fim = request.form['hora_fim']
+    status_servico = request.form['status_servico']
+    id_cpf_paciente = request.form['id_cpf_paciente']
+    
+    # Verifique se o id_servico é um número inteiro
+    if id_servico:  # Verifique se id_servico está definido
+        agendarConsultaBD.criar_agendamento(id_medico, id_servico, data, hora_inicio, hora_fim, status_servico, id_cpf_paciente)
+        return redirect("/login")
+    else:
+        flash("Invalid servico ID")
+        return redirect(url_for("agendamentoGet"))  
+    
+    
 
+@app.route('/atualizar_agendamento/<int:id_agendamento>', methods=['GET', 'POST'])
+def atualizar_agendamento(id_agendamento):
+    if request.method == 'POST':
+        id_medico_novo = request.form['id_medico']
+        id_servico_novo = request.form['id_servico']
+        data_novo = request.form['data']
+        hora_inicio_novo = request.form['hora_inicio']
+        hora_fim_novo = request.form['hora_fim']
+        status_servico_novo = request.form['status_servico']
+        id_cpf_paciente_novo = request.form['id_cpf_paciente']
+        
+        atualizar_agendamento(id_agendamento, id_medico_novo, id_servico_novo, data_novo, hora_inicio_novo, hora_fim_novo, status_servico_novo, id_cpf_paciente_novo)
+        return redirect(url_for('agendamentos'))
+    
+    agendamento = agendarConsultaBD.listar_agendamentos()[id_agendamento-1]
+    servicos = agendarConsultaBD.listar_servicos()
+    medicos = agendarConsultaBD.listar_medico()
+    return render_template('atualizar_agendamento.html', agendamento=agendamento, servicos=servicos, medicos=medicos)
 
-
-# tem que complementar
-
-
-
+@app.route('/deletar_agendamento/<int:id_agendamento>')
+def deletar_agendamento(id_agendamento):
+    deletar_agendamento(id_agendamento)
+    return redirect(url_for('agendamentos'))
 
 ############# Rotas de Gestão ##################
 
@@ -309,7 +367,7 @@ def cadastroGet():
 
 @app.post("/cadastro")
 def contaCadastrar():
-    if 1==1:
+    try:
         email = request.form["email"]
         senha = request.form["senha"]
         FK_Paciente = request.form["cpf"]
@@ -340,7 +398,7 @@ def contaCadastrar():
 
         return redirect(url_for('loginGet'))
 
-    else:
+    except:
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         print("deu erro")
         return redirect("/erro")
@@ -379,29 +437,6 @@ def contaAtualizar():
             return redirect("/login")
     
 ############# Rotas de controle de acesso ##################
-# @app.get("/login")
-# def loginGet():
-#     return render_template("tela_login.html")
-
-
-# @app.post("/login")
-# def loginPost():
-#     email = request.form["email"]
-#     senha = request.form["senha"]
-#     usuario = usuarioBD.pegarUsuario(email)
-#     if (email == usuario[1] and senha == usuario[2]):
-#         session["nivel"] = usuario[3]
-#         session["email"] = usuario[1]
-#         return redirect("/")
-#     else:
-#         return redirect("/login")
-
-
-# @app.route("/logout")
-# def logout():
-#     session.clear()
-#     return redirect("/")
-
 
 @app.get("/login")
 def loginGet():

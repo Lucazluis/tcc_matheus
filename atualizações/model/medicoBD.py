@@ -2,6 +2,14 @@ import model.BD as BD
 from mysql.connector import Error
 from datetime import *
 
+SEGUNDA = 0 
+TERCA = 1
+QUARTA = 2
+QUINTA = 3
+SEXTA = 4
+SABADO = 5
+DOMINGO = 6
+
 def criar_medico(nome, crm):
     conexao = BD.iniciarConexao()
     if conexao is not None:
@@ -151,7 +159,7 @@ def atualizarListaServicosMedico(idMedico,listaServicos):
     removerTodosOsServicosDoMedico(idMedico)
     addServicosDoMedico(idMedico, listaServicos)
     
-def getListaMedicoByServicos(idServico):
+def getListaMedicoByServicos(idServico):    
     query = """
     select
     m.id,
@@ -171,8 +179,6 @@ def getListaMedicoByServicos(idServico):
     d.tempo_consulta_min
     
   
-    
-     
 	from medico_servico ms
 
 	left join medico m
@@ -191,22 +197,21 @@ def getListaMedicoByServicos(idServico):
             cursor = conexao.cursor()
             cursor.execute(query, [idServico])
             resultado = cursor.fetchall()
+            cursor.close()
+            conexao.close()
             return ajusteDadosDisponibilidade(resultado)
         except Error as e:
             print(f"Erro ao executar o comando de inserção: {e}")
-        finally:
-            cursor.close()
-            conexao.close()
             
 def ajusteDadosDisponibilidade(lista):
     novaLista = []
     for row in lista:
         resultado = getIndexMedicoJaExistente(row[0], novaLista)
         if(getIndexMedicoJaExistente(row[0], novaLista) is not False):
-            novaLista[resultado][4] = novaLista[resultado][4] + getHorarios(row[5],row[6],row[7], row[4])
+            novaLista[resultado][4] = novaLista[resultado][4] + getHorarios(row[5],row[6],row[7], row[4],row[0])
         else:
             temp = []
-            horarios = getHorarios(row[5],row[6],row[7], row[4])
+            horarios = getHorarios(row[5],row[6],row[7], row[4], row[0])
             for n in range(4):
                 temp.append(row[n])
             temp.append(horarios)
@@ -219,14 +224,64 @@ def getIndexMedicoJaExistente(id, novaLista):
             return i
     return False
 
-def getHorarios(inicio, fim, intervalo, dia):
+def getHorarios(inicio, fim, intervalo, dia, id_medico):
     delta = timedelta(minutes=intervalo)
     listaHorario = []
     while(inicio <= fim):
-        listaHorario.append([dia, format_timedelta_to_HHMMSS(inicio)])
+        horario = format_timedelta_to_HHMMSS(inicio)
+        resultado = jaPossuiAgendamento(id_medico, horario)
+        if(resultado == False):     
+            listaHorario.append([getDataDoDia(dia),dia,horario])
+        
         inicio = inicio + delta
     return listaHorario
-    
+
+def jaPossuiAgendamento(id_medico, horario):
+    queryAgendamento = "SELECT count(*) FROM agendamentos a where a.id_medico = %s and a.hora_inicio = str_to_date(%s,\"%T\") ;"
+    conexao = BD.iniciarConexao()
+    if conexao is not None:
+        try:
+            cursor = conexao.cursor()
+            cursor.execute(queryAgendamento, [id_medico, horario])
+            resultado = cursor.fetchone()
+            cursor.close()
+            conexao.close()
+            if(resultado[0] == 1):
+                return True
+            else:
+                return False
+        except Error as e:
+            print(f"Erro ao executar o comando de inserção: {e}")
+
+def getDataDoDia(dia):
+    intDia = getIntDia(dia)
+    dataReferencia = datetime.now()
+    delta = timedelta(days=1)
+    if(dataReferencia.weekday() == intDia ):
+        return dataReferencia.strftime("%d/%m/%Y")
+    else:
+        for n in range(6):
+            dataReferencia = dataReferencia + delta
+            if(dataReferencia.weekday() == intDia ):
+                return dataReferencia.strftime("%d/%m/%Y")
+            
+
+def getIntDia(dia):
+    if(dia == "Segunda-feira"):
+        return SEGUNDA
+    elif(dia == "Terça-feira"):
+        return TERCA
+    elif(dia == "Quarta-feira"):
+        return QUARTA
+    elif(dia == "Quinta-feira"):
+        return QUINTA
+    elif(dia == "Sexta-feira"):
+        return SEXTA
+    elif(dia == "Sabado"):
+        return SABADO
+    else:
+        return DOMINGO
+       
 def format_timedelta_to_HHMMSS(td):
     td_in_seconds = td.total_seconds()
     hours, remainder = divmod(td_in_seconds, 3600)
