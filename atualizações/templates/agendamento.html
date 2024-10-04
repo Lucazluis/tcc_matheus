@@ -12,85 +12,84 @@
 
   {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <div class="caixa"> 
+  <div class="caixa">
     {% for message in messages %}
-      <ul>
-        <li>{{ message }}</li>
-      </ul>
-      <a href="{{ url_for('index') }}"><button class="botao">ok</button></a>
+    <ul>
+      <li>{{ message }}</li>
+    </ul>
+    <a href="{{ url_for('index') }}"><button class="botao">ok</button></a>
     {% endfor %}
   </div>
   {% endif %}
-{% endwith %}
-  
-    <div class="container">
-        <div class="search-bar">
-            <form action="/agendamento" method="get">
-                <label for="servicos">Selecione o seu Serviço:</label>
-                <select name="servicos" id="servicos">
-                    <option value="" disabled selected>Selecione...</option>
-                    {% for servicos in listaServico %}
-                    <option value="{{ servicos[0] }}">{{ servicos[2] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
+  {% endwith %}
 
-        {% if listaMedicosHorarios %}
-        <div class="tabelaMedicos">
-            {% for medicoHorario in listaMedicosHorarios %}
-            <div class="doctor-info">
-                <img src="https://via.placeholder.com/150" alt="Foto do Médico">
-                <div class="info">
-                  <h2 value="{{ medicoHorario[0] }}">{{ medicoHorario[1] }}</h2>
-                  <p>CRM: {{ medicoHorario[2] }}</p>
-                  <div>
-                    <h3>Especialidades:</h3>
-                    <p>{{ medicoHorario[3] }}</p>
-                  </div>
-                </div>
-                <div class="calendario">
-                  <h2>Calendário de Disponibilidade</h2>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Data</th>
-                        <th>Dia</th>
-                        <th>Horário</th>
-                        <th>Agendar</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for disponibilidade in medicoHorario[4] %}
-                      <tr>
-                        <td>{{ disponibilidade[0] }}</td>
-                        <td>{{ disponibilidade[1] }}</td>
-                        <td>{{ disponibilidade[2] }}</td>
-
-                        <td>
-                          <a href="{{ url_for('confirmacao', servico=listaServico[0][0], data=disponibilidade[0], hora=disponibilidade[2], medico=medicoHorario[0]) }}">
-                            <button class="botaodispo">Agendar</button>
-                          </a>
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="mapa">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.206524404726!2d-34.88679098505967!3d-8.060289676626722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab220c3425f397%3A0xa3301c032a00803e!2sCasa+Amarela%2C+Recife%2C+PE!5e0!3m2!1spt-BR!2sbr!4v1694405773685!5m2!1spt-BR!2sbr"
-                width="70%" height="500" justify-content: center; loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
+  <div class="container">
+    <div class="search-bar">
+      <form action="/agendamento" method="get">
+        <label for="servicos">Selecione o seu Serviço:</label>
+        <select name="servicos" id="servicos">
+          <option value="" disabled selected>Selecione...</option>
+          {% for servicos in listaServico %}
+          <option value="{{ servicos[0] }}">{{ servicos[2] }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit">Buscar</button>
+      </form>
     </div>
+
+    {% if listaMedicosHorarios %}
+    <div class="tabelaMedicos">
+      {% for medicoHorario in listaMedicosHorarios %}
+      <div class="doctor-info">
+        <img src="https://via.placeholder.com/150" alt="Foto do Médico">
+        <div class="info">
+          <h2 value="{{ medicoHorario[0] }}">{{ medicoHorario[1] }}</h2>
+          <p>CRM: {{ medicoHorario[2] }}</p>
+          <div>
+            <h3>Especialidades:</h3>
+            <p>{{ medicoHorario[3] }}</p>
+          </div>
+        </div>
+        <div class="calendario">
+          <h2>Calendário de Disponibilidade</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Dia</th>
+                <th>Horário</th>
+                <th>Agendar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for disponibilidade in medicoHorario[4] %}
+              <tr>
+                <td>{{ disponibilidade[0] }}</td>
+                <td>{{ disponibilidade[1] }}</td>
+                <td>{{ disponibilidade[2] }}</td>
+                <td>
+                  <a
+                    href="{{ url_for('confirmacao', servico=listaServico[0][0], data=disponibilidade[0], hora=disponibilidade[2], id_medico=medicoHorario[0]) }}">
+                    <button class="botaodispo">Agendar</button>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="mapa">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.206524404726!2d-34.88679098505967!3d-8.060289676626722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab220c3425f397%3A0xa3301c032a00803e!2sCasa+Amarela%2C+Recife%2C+PE!5e0!3m2!1spt-BR!2sbr!4v1694405773685!5m2!1spt-BR!2sbr"
+        width="70%" height="500" justify-content: center; loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
 </body>
 {% endblock %}
 

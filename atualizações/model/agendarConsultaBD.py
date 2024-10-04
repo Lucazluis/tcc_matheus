@@ -15,7 +15,7 @@ def listar_servicos():
     return resultados
 
 
-def criar_agendamento(idMedico, idServico, data, horaInicio, ):  # Adiciona cpf_paciente como parâmetro
+def criar_agendamento(id_medico, idServico, data, horaInicio):  # Adiciona cpf_paciente como parâmetro
     conexao = BD.iniciarConexao()
     
     if conexao is None:
@@ -26,7 +26,7 @@ def criar_agendamento(idMedico, idServico, data, horaInicio, ):  # Adiciona cpf_
         cursor = conexao.cursor()
 
         # Verificando se os dados obrigatórios estão presentes
-        if not idMedico or not idServico or not data or not horaInicio:
+        if not id_medico or not idServico or not data or not horaInicio:
             print("Erro: Dados incompletos fornecidos.")
             return False
 
@@ -34,7 +34,7 @@ def criar_agendamento(idMedico, idServico, data, horaInicio, ):  # Adiciona cpf_
             INSERT INTO agendamentos (id_medico, id_servico, data, hora_inicio, )  # Adiciona a coluna id_cpf_paciente
             VALUES (%s, %s, %s, %s) 
         '''
-        parametros = (idMedico, idServico, data, horaInicio, )  # Inclui o CPF nos parâmetros
+        parametros = (id_medico, idServico, data, horaInicio, )  # Inclui o CPF nos parâmetros
         
         cursor.execute(comando_agendamento, parametros)
         conexao.commit()  # Add this line to commit the changes

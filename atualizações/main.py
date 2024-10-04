@@ -13,16 +13,14 @@ import model.agendarConsultaBD as agendarConsultaBD
 app = Flask(__name__)
 app.secret_key = "WagnerELucas"
 
-################# Inicio ###################
+# Inicio
+
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-
-
 ############# Rotas de serviço ##################
-
 @app.route("/servico")
 def servicosGet():
     servicos = servicoBD.listar_servicos()
@@ -61,6 +59,7 @@ def servicoAtualizar():
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
+
 @app.route("/servico/deletar", methods=["POST"])
 def servicoDeletar():
     if "email" in session and session.get("nivel") == "secretaria":
@@ -76,8 +75,6 @@ def servicoDeletar():
     else:
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error") 
         return redirect("/login") 
-    
-    
 
 ############# Rotas de Especialidades ##################
 
@@ -102,6 +99,7 @@ def especialidadeCadastrar():
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
+
 @app.post("/especialidade/atualizar")
 def especialidadeAtualizar():
     if "email" in session and session.get("nivel") == "secretaria":
@@ -115,19 +113,22 @@ def especialidadeAtualizar():
             flash(f"Ocorreu um erro ao atualizar a especialidade: {e}", "error")
             return redirect("/login")
 
+
 @app.post("/especialidade/deletar")
-def deletarEspecialidade():
+def especialidadeDeletar():
     if "email" in session and session.get("nivel") == "secretaria":
         id = request.form["id"]
 
-        if especialidadeBD.deletar_especialidade(int(id)):
-            flash("Especialidade excluída com sucesso!", "success")
-            return redirect(url_for('especialidadeGet'))
-        else:
-            flash("Ocorreu um problema ao excluir a especialidade", "error")
-            return redirect("/login")
+        try:
+            especialidadeBD.deletar_especialidade(int(id))
+            flash("Especialidade deletada com sucesso!", "success")
+        except Exception as e:
+            flash(f"Ocorreu um erro ao deletar a especialidade: {e}", "error")
 
-
+        return redirect(url_for('especialidadeGet'))
+    else:
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
+        return redirect("/login")
 
 ############# Rotas de Medico ##################
 
@@ -188,14 +189,13 @@ def medicoDelatar():
 
     return redirect(url_for('medicosGet'))
 
-
-
 ############# Rotas de Dispoonibilidade ##################
 
 @app.get("/disponibilidade")
 def disponibilidadeGet():
     disponibilidade = disponibilidadeBD.listar_disponibilidade()
     return render_template("disponibilidade.html", listarDisponibilidade=disponibilidade)
+
 
 @app.post("/disponibilidade/cadastrar")
 def disponibilidadeCadastrar():
@@ -211,99 +211,114 @@ def disponibilidadeCadastrar():
             flash("Disponibilidade criada com sucesso!", "success")
         except Exception as e:
             flash(f"Ocorreu um erro ao criar a disponibilidade: {e}", "error")
+
         return redirect(url_for('disponibilidadeGet'))
     else:
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         return redirect("/login")
 
+
 @app.post("/disponibilidade/atualizar")
 def disponibilidadeAtualizar():
     if "email" in session and session.get("nivel") == "secretaria":
-        id_disponibilidade = request.form["id"]
-        id_medico = request.form["idMedico"]
-        hora_inicio = request.form["horaInicio"]
-        hora_fim = request.form["horaFim"]
-        tempo_consulta = request.form["tempo"]
-        dia_semana = request.form["dia"]
+        id = request.form["id"]
+        FK_medico = request.form["idMedico"]
+        horario_inicio = request.form["horaInicio"]
+        horario_fim = request.form["horaFim"]
+        tempo_consulta_min = request.form["tempo"]
+        DiaAtendimento = request.form["dia"]
+        dataDisponivel = request.form["data"]
 
-        if disponibilidadeBD.atualizar_disponibilidade(int(id_disponibilidade), int(id_medico), hora_inicio, hora_fim, int(tempo_consulta), dia_semana):
+        try:
+            disponibilidadeBD.atualizar_disponibilidade(int(id), int(FK_medico),horario_inicio,horario_fim,int(tempo_consulta_min),DiaAtendimento,dataDisponivel)
             flash("Disponibilidade atualizada com sucesso!", "success")
             return redirect(url_for('disponibilidadeGet'))
-        else:
-            flash("Ocorreu um problema ao atualizar a disponibilidade", "error")
+        except Exception as e:
+            flash(f"Ocorreu um erro ao atualizar a disponibilidade: {e}", "error")
             return redirect("/login")
+
 
 @app.post("/disponibilidade/deletar")
 def disponibilidadeDeletar():
     if "email" in session and session.get("nivel") == "secretaria":
-        id_disponibilidade = request.form["id"]
+        id = request.form["id"]
 
-        if disponibilidadeBD.deletar_disponibilidade(int(id_disponibilidade)):
-            flash("Disponibilidade excluída com sucesso!", "success")
-            return redirect(url_for('disponibilidadeGet'))
-        else:
-            flash("Ocorreu um problema ao excluir a disponibilidade", "error")
-            return redirect("/login")
+        try:
+            disponibilidadeBD.deletar_disponibilidade(int(id))
+            flash("Disponibilidade deletada com sucesso!", "success")
+        except Exception as e:
+            flash(f"Ocorreu um erro ao deletar a disponibilidade: {e}", "error")
 
-
-
+        return redirect(url_for('disponibilidadeGet'))
+    else:
+        flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
+        return redirect("/login")
 ############# Rotas de Agendamento ##################
 @app.get("/agendamento")
-def agendamento_get():
-    id_servico = request.args.get("servicos")
+def agendamentoGet():
+    idServico = request.args.get("servicos")
     servicos = agendarConsultaBD.listar_servicos()
-    lista_medicos_horarios = []
+    listaMedicosHorarios = []
     disponibilidade = []
 
-    if id_servico:
+    if idServico:  # Check if idServico is not empty
         try:
-            id_servico = int(id_servico)
-            lista_medicos_horarios = medicoBD.getListaMedicoByServicos(id_servico)
-            # disponibilidade = get_disponibilidade_by_servico(id_servico)  # uncomment if needed
+            idServico = int(idServico)  # Try to convert idServico to an integer
+            listaMedicosHorarios = medicoBD.getListaMedicoByServicos(idServico)
+            # You might need to populate disponibilidade based on idServico
+            # For example:
+            # disponibilidade = get_disponibilidade_by_servico(idServico)
         except ValueError:
+            # Handle the case where idServico is not a valid integer
             flash("Invalid servico ID")
-            return redirect(url_for("agendamento_get"))
-    return _render_agendamento_template(servicos, lista_medicos_horarios, disponibilidade)
+            return redirect(url_for("agendamentoGet"))
+
+    return render_template("agendamento.html", 
+                           listaServico = servicos, 
+                           listaMedicosHorarios = listaMedicosHorarios, 
+                           disponibilidade = disponibilidade)
 
 @app.route('/agendamento', methods=['GET', 'POST'])
 def agendamento():
     if request.method == 'POST':
         id_servico = request.form['id_servico']
-        lista_medicos_horarios = medicoBD.getListaMedicoByServicos(id_servico)
+        listaMedicosHorarios = medicoBD.getListaMedicoByServicos(id_servico)
         servicos = servicoBD.listar_servicos()
-        return _render_agendamento_template(servicos, lista_medicos_horarios)
+        if servicos:
+            return render_template('agendamento.html', listaServico=servicos, listaMedicosHorarios=listaMedicosHorarios)
+        else:
+            return render_template('agendamento.html', listaServico=[], listaMedicosHorarios=listaMedicosHorarios)
+    
     servicos = servicoBD.listar_servicos()
-    return _render_agendamento_template(servicos)
+    if servicos:
+        return render_template('agendamento.html', listaServico=servicos)
+    else:
+        return render_template('agendamento.html', listaServico=[])
 
-def _render_agendamento_template(servicos, lista_medicos_horarios=None, disponibilidade=None):
-    if lista_medicos_horarios is None:
-        lista_medicos_horarios = []
-    if disponibilidade is None:
-        disponibilidade = []
-    return render_template("agendamento.html", 
-                           listaServico=servicos, 
-                           listaMedicosHorarios=lista_medicos_horarios, 
-                           disponibilidade=disponibilidade)
 
 @app.route('/agendar', methods=['POST'])
 def agendar():
     if "email" in session and session.get("nivel") == "paciente":
-        dados = request.get_json() if request.is_json else request.form
-        id_medico = dados.get('id_medico')
-        id_servico = dados.get('id_servico')
-        data = dados.get('data')
-        hora_inicio = dados.get('hora_inicio')
-        
+        id_medico = request.form['id_medico']
+        id_servico = request.form['id_servico']
+        data = request.form['data']
+        hora_inicio = request.form['hora_inicio']
+
+        # Verifica se todos os campos estão preenchidos
         if all([id_medico, id_servico, data, hora_inicio]):
             try:
+                # Converter data de 'DD/MM/YYYY' para 'YYYY-MM-DD'
                 data_convertida = datetime.strptime(data, '%d/%m/%Y').strftime('%Y-%m-%d')
+
+                # Tenta criar o agendamento no banco de dados
                 agendarConsultaBD.criar_agendamento(id_medico, id_servico, data_convertida, hora_inicio)
                 flash("Agendamento marcado com sucesso!", "success")
             except Exception as e:
-                flash(f"Agendamento marcado com sucesso!")
+                flash(f"Ocorreu um erro ao marcar o agendamento: {e}", "error")
         else:
-            flash("Agendamento marcado com sucesso!")
-        return redirect(url_for('agendamento_get'))
+            flash("Por favor, preencha todos os campos corretamente.", "error")
+        
+        return redirect(url_for('agendamentoGet'))
     else:
         flash("Você precisa estar logado como paciente para agendar.", "error")
         return redirect(url_for('login'))
@@ -314,20 +329,12 @@ def confirmacao():
     servico = request.args.get('servico')
     data = request.args.get('data')
     hora = request.args.get('hora')
-
-    return render_template('corfimacao.html', medico=medico, servico=servico, data=data, hora=hora)
+    return render_template('corfimacao.html',medico=medico, servico=servico, data=data, hora=hora)
 
 @app.route('/agendamentos')
 def agendamentos():
     agendamentos = agendarConsultaBD.listar_agendamentos()
     return render_template('agendamento.html', agendamentos=agendamentos)
-
-@app.route('/consultas_agendadas')
-def consultas_agendadas():
-    consultas = agendarConsultaBD.get_consultas_agendadas()
-    return render_template('consultas_agendadas.html', consultas=consultas)
-
-
 
 ############# Rotas de Gestão ##################
 
@@ -335,7 +342,6 @@ def consultas_agendadas():
 def gestaoGet():
     servicos = gestaoBD.listar_servicos()
     return render_template("gestao_servico.html", listaServicos=servicos)
-
 
 ############# Rotas de controle de acesso ##################
     
@@ -358,6 +364,7 @@ def usuario():
 ############# Rotas de Cadastro ##################
 
 @app.get("/cadastro")
+
 def cadastroGet():
     return render_template("tela_cadastro.html")
 
@@ -367,10 +374,8 @@ def contaCadastrar():
     try:
         email = request.form["email"]
         senha = request.form["senha"]
-        FK_Paciente = request.form.get('cpf')
-        session['cpf'] = cpf            
-        cpf = request.form.get('cpf')
-        session['cpf'] = cpf 
+        FK_Paciente = request.form["cpf"]
+        cpf = request.form["cpf"]
         nome = request.form["nome"]
         data_nascimento = request.form["dataNascimento"]
         e_mail = request.form["email"]
@@ -385,8 +390,7 @@ def contaCadastrar():
         complemento = request.form["complemento"]
         pais = request.form["pais"]
         referencia = request.form["referencia"]
-        cpf_paciente = request.form.get('cpf')
-        session['cpf'] = cpf         
+        cpf_paciente = request.form["cpf"]
         try:
             usuarioBD.criar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
             usuarioBD.criar_usuario(email, senha, FK_Paciente)
@@ -402,6 +406,7 @@ def contaCadastrar():
         flash("Você precisa estar logado como secretaria para realizar esta ação.", "error")
         print("deu erro")
         return redirect("/erro")
+    
     
 @app.post("/cadastro/atualizar")
 def contaAtualizar():
@@ -425,27 +430,22 @@ def contaAtualizar():
         pais = request.form["pais"]
         referencia = request.form["referencia"]
         cpf_paciente = request.form["cpf"]
-        
-        # Obter o ID do paciente
-        paciente_id = usuarioBD.pegarUsuario(email)[0]
-        
         try:
-            usuarioBD.atualizar_usuario(paciente_id, email, senha, FK_Paciente)
-            usuarioBD.atualizar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
-            usuarioBD.atualizar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, referencia,cpf_paciente)
+            disponibilidadeBD.atualizar_usuario(email, senha, FK_Paciente)
+            disponibilidadeBD.atualizar_paciente(cpf, nome, data_nascimento, e_mail, telefone1, telefone2)
+            disponibilidadeBD.atualizar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, referencia,cpf_paciente)
             flash("Cadastro atualizado com sucesso!", "success")
             return render_template("index.html")  # Return the rendered template as a response
         except Exception as e:
             flash(f"Ocorreu um erro ao atualizar o cadastro: {e}", "error")
             return redirect("/login")
     
-
-
 ############# Rotas de controle de acesso ##################
 
 @app.get("/login")
 def loginGet():
     return render_template("tela_login.html")
+
 
 @app.post("/login")
 def loginPost():
@@ -461,6 +461,7 @@ def loginPost():
         flash("E-mail ou senha incorretos.", "error")
         return redirect("/login")
 
+
 @app.route("/logout")
 def logout():
     session.clear()
@@ -468,9 +469,6 @@ def logout():
     return redirect("/")
 
 app.run(debug=True)
-
-
-
 
 
 
