@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirmação de Agendamento</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='confirmacao.css')}}">
+</head>
+
+<body>
+  <div class="modal">
+    <div class="modal-content">
+      <h2>Confirmação de Agendamento</h2>
+      <p>Verifique os detalhes do agendamento antes de confirmar:</p>
+      <ul>
+        
+        <li>Médico: {{ medico }}</li>
+        <li>Serviço: {{ servico }}</li>
+        <li>Data: {{ data }}</li>
+        <li>Hora: {{ hora }}</li>
+      </ul>
+
+      <form action="/agendar" method="post">
+        <input type="hidden" name="id_medico" value="{{ medico }}">
+        <input type="hidden" name="id_servico" value="{{ servico }}">
+        <input type="hidden" name="data" value="{{ data }}">
+        <input type="hidden" name="hora_inicio" value="{{ hora }}">
+                
+        <button type="submit" class="btn-confirmar">Confirmar Agendamento</button>
+        <button type="button" class="btn-cancelar" onclick="window.history.back()">Cancelar</button>
+    </form>
+    
+    </div>
+  </div>
+  <script src="{{url_for('static', filename='script.js')}}"></script>
+
+</body>
+</html>

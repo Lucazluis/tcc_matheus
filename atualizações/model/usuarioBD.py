@@ -34,15 +34,14 @@ def atualizar_paciente(cpf, nome_novo, data_nascimento_novo, e_mail_novo, telefo
     conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
-            cursor = conexao.cursor()
-            comando = 'UPDATE paciente SET nome = %s, data_nascimento = %s, e_mail = %s, telefone1 = %s, telefone2= %s WHERE id = %s' 
-            cursor.execute(comando, (nome_novo, data_nascimento_novo, e_mail_novo, telefone1_novo, telefone2_novo, cpf))
-            conexao.commit()
+            with conexao.cursor() as cursor:  # Use a context manager to ensure cursor is closed
+                comando = 'UPDATE paciente SET nome = %s, data_nascimento = %s, e_mail = %s, telefone1 = %s, telefone2= %s WHERE cpf = %s' 
+                cursor.execute(comando, (nome_novo, data_nascimento_novo, e_mail_novo, telefone1_novo, telefone2_novo, cpf))
+                conexao.commit()
         except Error as e:
             print(f"Erro ao executar o comando de atualização: {e}")
         finally:
-            cursor.close()
-            conexao.close()
+            conexao.close()  # Close the connection in the finally block   
             
 def deletar_paciente(id_paciente):
     conexao = BD.iniciarConexao()
@@ -79,7 +78,7 @@ def atualizar_usuario(id_usuario, email_novo, senha_nova, FK_Paciente_novo):
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando = 'UPDATE usuario SET email = %s, senha = %s, tipo = "paciente", FK_Paciente = %s WHERE id = %s' 
+            comando = 'UPDATE usuario SET email = %s, senha = %s, FK_Paciente = %s WHERE id = %s' 
             cursor.execute(comando, (email_novo, senha_nova, FK_Paciente_novo, id_usuario))
             conexao.commit()
         except Error as e:
@@ -120,13 +119,13 @@ def criar_endereco(rua,bairro,cidade,estado,pais,cep,numero_casa,complemento, re
             cursor.close()
             conexao.close()
             
-def atualizar_endereco(idEndereço,rua_nova,bairro_novo,cidade_nova,estado_novo,pais_novo,cep_novo,numero_casa_nova,complemento_novo, referencia_nova,cpf_paciente):
+def atualizar_endereco(rua_nova,bairro_novo,cidade_nova,estado_novo,pais_novo,cep_novo,numero_casa_nova,complemento_novo, referencia_nova,cpf_paciente):
     conexao = BD.iniciarConexao()
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando = 'UPDATE endereco SET rua = %s, bairro = %s, cidade = %s, estado = %s, pais= %s, cep= %s, numero_casa= %s, complemento= %s, referencia= %s WHERE id = %s' 
-            cursor.execute(comando, (rua_nova,bairro_novo,cidade_nova,estado_novo,pais_novo,cep_novo,numero_casa_nova,complemento_novo, referencia_nova,cpf_paciente, idEndereço))
+            comando = 'UPDATE endereco SET rua = %s, bairro = %s, cidade = %s, estado = %s, pais= %s, cep= %s, numero_casa= %s, complemento= %s, referencia= %s WHERE cpf_paciente = %s' 
+            cursor.execute(comando, (rua_nova,bairro_novo,cidade_nova,estado_novo,pais_novo,cep_novo,numero_casa_nova,complemento_novo, referencia_nova,cpf_paciente))
             conexao.commit()
         except Error as e:
             print(f"Erro ao executar o comando de atualização: {e}")

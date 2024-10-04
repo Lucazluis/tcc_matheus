@@ -6,8 +6,6 @@
 {% endblock %}
 
 {% block corpo %}
-{{listaMedicosHorarios}}
-
 
 
 <body>
@@ -45,7 +43,7 @@
             <div class="doctor-info">
                 <img src="https://via.placeholder.com/150" alt="Foto do Médico">
                 <div class="info">
-                  <h2>{{ medicoHorario[1] }}</h2>
+                  <h2 value="{{ medicoHorario[0] }}">{{ medicoHorario[1] }}</h2>
                   <p>CRM: {{ medicoHorario[2] }}</p>
                   <div>
                     <h3>Especialidades:</h3>
@@ -60,7 +58,7 @@
                         <th>Data</th>
                         <th>Dia</th>
                         <th>Horário</th>
-                        <th>Disponibilidade</th>
+                        <th>Agendar</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -69,9 +67,12 @@
                         <td>{{ disponibilidade[0] }}</td>
                         <td>{{ disponibilidade[1] }}</td>
                         <td>{{ disponibilidade[2] }}</td>
+
                         <td>
-                          <button class="botaodispo" onclick="agendar('{{ disponibilidade[0] }}', '{{ disponibilidade[1] }}','{{ disponibilidade[2] }}')">Agendar</button>
-                      </td>
+                          <a href="{{ url_for('confirmacao', servico=listaServico[0][0], data=disponibilidade[0], hora=disponibilidade[2], medico=medicoHorario[0]) }}">
+                            <button class="botaodispo">Agendar</button>
+                          </a>
+                        </td>
                       </tr>
                       {% endfor %}
                     </tbody>
@@ -94,13 +95,5 @@
 {% endblock %}
 
 {% block js %}
-<script>
-function agendar(id_medico, hora_inicio) {
-  // ...
-  var formData = new FormData();
-  formData.append('id_medico', id_medico);
-  formData.append('id_servico', id_servico); // Add this line
-  // ...
-}
-</script>
+
 {% endblock %}

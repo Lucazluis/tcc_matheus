@@ -1,124 +1,107 @@
-{% extends "layout.html" %}
-
-{% block estilo %}
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='agendamento.css') }}"> -->
-{% endblock %}
-
-{% block corpo %}
-<style>body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 20px;
-  }
-  
-  .search-bar {
-    display: flex;
-    width: 80%;
-    margin-bottom: 20px;
-    background-color: white;
-    border-radius: 5px;
-    padding: 10px;
-    border: 1px solid #ced4da;
-  }
-  
-  .search-bar label {
-    margin-bottom: 5px;
-    align-items: center;
-  }
-  
-  .search-bar input {
-    flex: 1;
-    border: none;
-    padding: 5px;
-    font-size: 16px;
-  }
-  
-  .search-bar button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-  }
-  
-  .tabelaMedicos {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-  }
-  
-  .doctor-info {
-    width: 40%;
-    padding: 20px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    background-color: white;
-  }
-  
-  .doctor-info img {
-    width: 100}
-    </style>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Fornecedores</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Adicione outros estilos se necessário -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fornecedores.css') }}">
+</head> 
 <body>
-    <div class="container">
-        <div class="search-bar">
-            <form action="/agendamento" method="get">
-                <label for="servicos">Selecione o seu Serviço:</label>
-                <select name="servicos" id="servicos">
-                    {% for servicos in listaServico %}
-                    <option value="{{ servicos[0] }}">{{ servicos[2] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Buscar</button>
+    
+<nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container-fluid d-flex justify-content-center">
+        <a class="navbar-brand" href="{{ url_for('menu') }}">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Monix" width="200" height="45">
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- Formulário para adicionar fornecedor -->
+    <form id="form-adicionar">
+        <h2>Adicionar Fornecedor</h2>
+        <div class="mb-3">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" id="nome" name="nome" required>
+        </div>
+        <div class="mb-3">
+            <label for="endereco">Endereço:</label>
+            <input type="text" class="form-control" id="endereco" name="endereco" required>
+        </div>
+        <div class="mb-3">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="produtos">Produtos:</label>
+            <input type="text" class="form-control" id="produtos" name="produtos" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Adicionar</button>
+    </form>
+    
+    <div class="container mt-4 text-center"> <!-- Adiciona a classe text-center para centralizar o conteúdo -->
+        <form class="d-inline-block" action="{{ url_for('pesquisar_fornecedor') }}" method="GET">
+            <input class="form-control me-2 pesquisa-input" type="search" placeholder="Pesquisar fornecedor por nome" aria-label="search" name="nome">
+            <button class="btn btn-outline-danger" type="submit">Pesquisar</button>
+        </form>
+    </div>
+    
+    <!-- Lista de fornecedores -->
+    <ul id="lista-fornecedores" class="mt-4">
+        {% for fornecedor in fornecedores %}
+        <li data-id="{{ fornecedor[0] }}">
+            <h3>{{ fornecedor[3] }}</h3>
+            <p><strong>Endereço:</strong> {{ fornecedor[1] }}</p>
+            <p><strong>Email:</strong> {{ fornecedor[2] }}</p>
+            <p><strong>Produtos:</strong> {{ fornecedor[4] }}</p>
+            <button class="btn btn-sm btn-warning btn-editar" data-bs-toggle="modal" data-bs-target="#editarFornecedorModal" data-id="{{ fornecedor[0] }}" data-nome="{{ fornecedor[3] }}" data-endereco="{{ fornecedor[1] }}" data-email="{{ fornecedor[2] }}" data-produtos="{{ fornecedor[4] }}">Editar</button>
+            <button class="btn btn-sm btn-danger btn-deletar">Deletar</button>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Modal template -->
+<div class="modal fade" id="editarFornecedorModal" tabindex="-1" aria-labelledby="editarFornecedorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-editar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarFornecedorModalLabel">Editar Fornecedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="fornecedor-id">
+                    <div class="mb-3">
+                        <label for="fornecedor-nome" class="form-label">Nome:</label>
+                        <input type="text" class="form-control" id="fornecedor-nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedor-endereco" class="form-label">Endereço:</label>
+                        <input type="text" class="form-control" id="fornecedor-endereco" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedor-email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="fornecedor-email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fornecedor-produtos" class="form-label">Produtos:</label> <input type="text" class="form-control" id="fornecedor-produtos" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
             </form>
         </div>
-
-        {% if listaMedicosHorarios %}
-        <div class="tabelaMedicos">
-            {% for medicoHorario in listaMedicosHorarios %}
-            <div class="doctor-info">
-                <img src="https://via.placeholder.com/150" alt="Foto do Médico">
-                <h2>{{ medicoHorario[1] }}</h2>
-                <p>CRM: {{ medicoHorario[2] }}</p>
-                <div>
-                    <h3>Especialidades:</h3>
-                    <p>{{ medicoHorario[3] }}</p>
-                </div>
-                <h3>Disponibilidades:</h3>
-                {% for disponibilidade in medicoHorario[4] %}
-                <div class="calendar">
-                    <div>
-                        <button> Dia: {{ disponibilidade[0] }} <br> Horário: {{ disponibilidade[1] }}</button>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="mapa">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.206524404726!2d-34.88679098505967!3d-8.060289676626722!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ab220c3425f397%3A0xa3301c032a00803e!2sCasa+Amarela%2C+Recife%2C+PE!5e0!3m2!1spt-BR!2sbr!4v1694405773685!5m2!1spt-BR!2sbr"
-                width="70%" height="500" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
     </div>
-</body>
-{% endblock %}
+</div>
 
-{% block js %}
-{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/fornecedores.js') }}"></script>
+
+<script>
+    
+</script>
+</body>
+</html>

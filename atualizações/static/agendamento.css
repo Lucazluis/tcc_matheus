@@ -16,12 +16,14 @@ body {
 
 .search-bar {
   display: flex;
+  height: 50%;
   width: 80%;
   margin-bottom: 20px;
   background-color: white;
   border-radius: 5px;
   padding: 10px;
   border: 1px solid #ced4da;
+  margin-top: 3%;
 }
 
 .search-bar label {
@@ -58,7 +60,7 @@ body {
 .mapa {
   height: 55%;
   width:100%;
-  border-radius: 3%;
+  border-radius: 5%;
   display:flex ;
   justify-content: center;
   align-items: center;
@@ -73,6 +75,8 @@ body {
   border: 1px solid #ced4da;
   border-radius: 5px;
   background-color: white;
+  border-radius: 30px;
+  margin-top: 3%;
 }
 
 .doctor-info img {
@@ -97,12 +101,13 @@ body {
 }
 
 .calendario {
-  width: 50%;
+  width: 65%;
   margin: 40px auto;
   padding: 20px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
 }
 
 .calendario h2 {

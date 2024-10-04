@@ -50,11 +50,13 @@ def deletar_especialidade(id):
     if conexao is not None:
         try:
             cursor = conexao.cursor()
-            comando = 'DELETE FROM especialidade WHERE id = %s'
-            cursor.execute(comando, [id])
+            comando_deletar_especialidade = "DELETE FROM especialidade WHERE id = %s"
+            cursor.execute(comando_deletar_especialidade, [id])
             conexao.commit()
-        except Error as e:
-            print(f"Erro ao executar o comando de exclusão: {e}")
+            return True
+        except Exception as e:
+            print(f"Ocorreu um problema ao excluir a especialidade: {e}")
+            return False
         finally:
             cursor.close()
             conexao.close()

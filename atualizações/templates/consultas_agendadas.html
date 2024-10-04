@@ -6,11 +6,6 @@
 
 {% block corpo%}
 
-
-
-
-
-
     <h1>Consultas Agendadas</h1>
 
     <div id="filtros">
@@ -31,9 +26,7 @@
         <button id="btn-filtrar">Filtrar</button>
     </div>
 
-    <div id="calendario"></div>
-
-   <!-- <table id="tabela-consultas" class="display" style="width: 100%;">
+    <table id="tabela-consultas" class="display" style="width: 100%;">
         <thead>
             <tr>
                 <th>Paciente</th>
@@ -43,9 +36,22 @@
                 <th>Ações</th>
             </tr>
         </thead>
-       
+        <tbody>
+            {% for consulta in consultas %}
+                <tr>
+                    <td>{{ consulta.paciente }}</td>
+                    <td>{{ consulta.servico }}</td>
+                    <td>{{ consulta.hora }}</td>
+                    <td>{{ consulta.profissional }}</td>
+                    <td>
+                        <button class="btn-editar" data-id="{{ consulta.id }}">Editar</button>
+                        <button class="btn-excluir" data-id="{{ consulta.id }}">Excluir</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
--->
+
     <div id="modal-consulta" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -73,103 +79,13 @@
 
 
 {% block js %}
-
-    <script> 
-// Funções para gerenciar consultas
-
-// Dados de exemplo (substitua por sua fonte de dados)
-var consultas = [
-    { id: 1, paciente: "João Silva", data: "2024-06-07", hora: "09:00", servico: "Limpeza Dental", profissional: "Dr. Almeida" },
-    { id: 2, paciente: "Maria Souza", data: "2024-06-07", hora: "10:30", servico: "Obturação", profissional: "Dra. Oliveira" },
-    { id: 3, paciente: "Pedro Cardoso", data: "2024-06-08", hora: "14:00", servico: "Raio-X", profissional: "Dr. Costa" },
-];
-
-// Função para carregar consultas na tabela
-function carregarConsultas() {
-    $("#tabela-consultas").DataTable({
-        data: consultas.map(function(consulta) {
-            return [
-                consulta.paciente,
-                consulta.servico,
-                consulta.data + " " + consulta.hora,
-                consulta.profissional,
-                '<button onclick="editarConsulta(' + consulta.id + ')">Editar</button> ' +
-                '<button onclick="confirmarConsulta(' + consulta.id + ')">Confirmar</button> ' +
-                '<button onclick="cancelarConsulta(' + consulta.id + ')">Cancelar</button>'
-            ];
-        }),
-        columns: [
-            { title: "Paciente" },
-            { title: "Serviço" },
-            { title: "Horário" },
-            { title: "Médico" },
-            { title: "Ações", orderable: false }
-        ],
-        language: {
-            "emptyTable": "Nenhuma consulta agendada.",
-            "search": "Buscar:",
-            "lengthMenu": "Mostrar _MENU_ entradas",
-            "zeroRecords": "Nenhuma consulta encontrada para a sua pesquisa",
-            "info": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
-            "infoEmpty": "Mostrando 0 a 0 de 0 entradas",
-            "infoFiltered": "(filtrado de _MAX_ entradas)",
-            "paginate": {
-                "first": "Primeiro",
-                "previous": "Anterior",
-                "next": "Próximo",
-                "last": "Último"
-            }
-        }
-    });
-}
-
-// Função para carregar serviços no filtro
-function carregarServicos() {
-    var servicoSelect = $("#servico");
-    servicoSelect.empty(); // Limpar opções
-
-    consultas.forEach(function(consulta) {
-        if (!servicoSelect.find('option[value="' + consulta.servico + '"]').length) {
-            servicoSelect.append('<option value="' + consulta.servico + '">' + consulta.servico + '</option>');
-        }
-    });
-}
-
-// Função para carregar profissionais no filtro
-function carregarProfissionais() {
-    var profissionalSelect = $("#profissional");
-    profissionalSelect.empty(); // Limpar opções
-
-    consultas.forEach(function(consulta) {
-        if (!profissionalSelect.find('option[value="' + consulta.profissional + '"]').length) {
-            profissionalSelect.append('<option value="' + consulta.profissional + '">' + consulta.profissional + '</option>');
-        }
-    });
-}
-
-// Função para aplicar filtros
-function aplicarFiltros() {
-    var data = $("#data").val();
-    var paciente = $("#paciente").val().toLowerCase();
-    var servico = $("#servico").val();
-    var profissional = $("#profissional").val();
-};
-
-    var consultasFiltradas = consultas.filter(function(consulta) {
-        var dataValida = data === "" || new Date(consulta.data) >= new Date(data);
-        var pacienteValido = paciente === "" || consulta.paciente.toLowerCase().includes(paciente);
-        var servicoValido = servico === "" || consulta.servico === servico;
-        var profissionalValido = profissional === "" || consulta.profissional === profissional;
-
-        return dataValida && pacienteValido && servicoValido && profissionalValido;
-    });
-
-    $("#tabela-consultas").DataTable().clear().draw(); // Limpar tabela
-    $("#tabela-consultas").DataTable().rows
+    <script>
+        $(document).ready(function() {
+            $('#tabela-consultas').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Portuguese.json"
+                }
+            });
+        });
     </script>
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.js"></script>
-   <script src="script.js"></script>//
-</body>
-</html>
 {% endblock %}
